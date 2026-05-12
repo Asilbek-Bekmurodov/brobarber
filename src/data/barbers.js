@@ -44,7 +44,7 @@ Beyond fades, Marcus is equally accomplished in beard design and grooming, belie
     experience: '7 Years',
     specialty: 'Color, Highlights & Treatments',
     tagline: 'Color is a language I speak fluently.',
-    bio: 'Daniel turns hair color into an art form — nuanced, personal, and always with the client's complexion and lifestyle at heart. His results speak quietly but powerfully.',
+    bio: "Daniel turns hair color into an art form — nuanced, personal, and always with the client's complexion and lifestyle at heart. His results speak quietly but powerfully.",
     fullBio: `Daniel Hayes came to barbering through a background in fine arts, and it shows. Every color consultation begins with a conversation about light — how it falls, how it moves, how it should work with a person's natural coloring and the way they live their life.
 
 Over seven years, Daniel has developed a reputation for color work that looks lived-in and natural rather than done. His approach to highlights, balayage, and toning is unhurried and meticulous — he takes the time to understand not just what a client wants, but why.
