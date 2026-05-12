@@ -1,13 +1,13 @@
 import HeroSection from '../components/HeroSection'
 import InfoBar from '../components/InfoBar'
-import WelcomeSection from '../components/WelcomeSection'
+import ServicesSection from '../components/ServicesSection'
 
 const HomePage = () => {
   return (
     <>
       <HeroSection />
       <InfoBar />
-      <WelcomeSection />
+      <ServicesSection />
     </>
   )
 }
