@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import MainLayout from './layouts/MainLayout'
 import HomePage from './pages/HomePage'
 import BarberDetailPage from './pages/BarberDetailPage'
+import AuthPage from './pages/AuthPage'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/barbers/:id" element={<BarberDetailPage />} />
         </Route>
+        <Route path="/auth" element={<AuthPage />} />
       </Routes>
     </BrowserRouter>
   )

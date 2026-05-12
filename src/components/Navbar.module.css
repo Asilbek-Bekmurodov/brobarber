@@ -67,16 +67,73 @@
   width: 100%;
 }
 
+/* ── Auth Buttons ── */
+
+.authButtons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.signInBtn {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: rgba(245, 245, 245, 0.6);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  padding: 6px 0;
+}
+
+.signInBtn:hover {
+  color: #f5f5f5;
+}
+
+.registerBtn {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  text-decoration: none;
+  padding: 8px 20px;
+  border: 1px solid rgba(201, 169, 110, 0.45);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.registerBtn:hover {
+  background: rgba(201, 169, 110, 0.1);
+  border-color: rgba(201, 169, 110, 0.8);
+}
+
+@media (max-width: 1024px) {
+  .navLinks {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .navbar {
     padding: 20px 24px;
   }
 
   .navLinks {
-    gap: 20px;
+    display: none;
   }
 
-  .link {
-    font-size: 12px;
+  .authButtons {
+    gap: 10px;
+  }
+
+  .signInBtn {
+    font-size: 11px;
+  }
+
+  .registerBtn {
+    font-size: 10px;
+    padding: 7px 16px;
   }
 }

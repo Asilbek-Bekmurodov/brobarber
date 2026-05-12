@@ -5,7 +5,7 @@ import styles from './Navbar.module.css'
 const navLinks = [
   { label: 'Home', path: '/' },
   { label: 'About', path: '/about' },
-  { label: 'Services \u0026 Pricing', path: '/services' },
+  { label: 'Services & Pricing', path: '/services' },
   { label: 'Gallery', path: '/gallery' },
   { label: 'Blog', path: '/blog' },
   { label: 'Contact', path: '/contact' },
@@ -33,6 +33,10 @@ const Navbar = () => {
             </li>
           ))}
         </ul>
+        <div className={styles.authButtons}>
+          <Link to="/auth?tab=login" className={styles.signInBtn}>Sign In</Link>
+          <Link to="/auth?tab=register" className={styles.registerBtn}>Register</Link>
+        </div>
       </div>
     </nav>
   )
