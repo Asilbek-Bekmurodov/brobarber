@@ -4,6 +4,7 @@ import MainLayout from './layouts/MainLayout'
 import HomePage from './pages/HomePage'
 import BarberDetailPage from './pages/BarberDetailPage'
 import AuthPage from './pages/AuthPage'
+import DashboardPage from './pages/DashboardPage'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -21,6 +22,7 @@ function App() {
           <Route path="/barbers/:id" element={<BarberDetailPage />} />
         </Route>
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </BrowserRouter>
   )
