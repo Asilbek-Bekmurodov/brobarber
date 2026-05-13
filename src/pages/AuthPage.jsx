@@ -11,6 +11,7 @@ const AuthPage = () => {
   const [regFirstName, setRegFirstName] = useState('')
   const [regLastName, setRegLastName] = useState('')
   const [regPhone, setRegPhone] = useState('')
+  const [regRole, setRegRole] = useState('user')
 
   const switchTab = (newTab) => {
     if (newTab === tab) return
@@ -142,11 +143,44 @@ const AuthPage = () => {
                 <div className={styles.formHeader}>
                   <h1 className={styles.formTitle}>Create account.</h1>
                   <p className={styles.formSubtitle}>
-                    Join Trim. to book appointments and manage your visits.
+                    {regRole === 'barber'
+                      ? 'Join Trim. as a barber to manage your schedule and clients.'
+                      : 'Join Trim. to book appointments and manage your visits.'}
                   </p>
                 </div>
 
                 <div className={styles.fields}>
+                  <div className={styles.field}>
+                    <span className={styles.label}>Register as</span>
+                    <div className={styles.roleSelector}>
+                      <button
+                        type="button"
+                        className={`${styles.roleCard} ${regRole === 'user' ? styles.roleCardActive : ''}`}
+                        onClick={() => setRegRole('user')}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                          <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        <span>Client</span>
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.roleCard} ${regRole === 'barber' ? styles.roleCardActive : ''}`}
+                        onClick={() => setRegRole('barber')}
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="6" cy="6" r="3" />
+                          <circle cx="6" cy="18" r="3" />
+                          <line x1="20" y1="4" x2="8.12" y2="15.88" />
+                          <line x1="14.47" y1="14.48" x2="20" y2="20" />
+                          <line x1="8.12" y1="8.12" x2="12" y2="12" />
+                        </svg>
+                        <span>Barber</span>
+                      </button>
+                    </div>
+                  </div>
+
                   <div className={styles.fieldRow}>
                     <div className={styles.field}>
                       <label className={styles.label} htmlFor="reg-firstname">First Name</label>
