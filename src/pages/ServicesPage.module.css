@@ -1,0 +1,637 @@
+/* ── Page ── */
+
+.page {
+  background-color: #111111;
+  min-height: 100vh;
+}
+
+/* ── Sticky Side Nav ── */
+
+.stickyNav {
+  position: fixed;
+  left: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.35);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.backLink:hover {
+  color: #c9a96e;
+}
+
+.backLink svg {
+  transition: transform 0.3s ease;
+}
+
+.backLink:hover svg {
+  transform: translateX(-4px);
+}
+
+.navDots {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.navDot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.navDotIndicator {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: rgba(245, 245, 245, 0.2);
+  transition: all 0.35s ease;
+  flex-shrink: 0;
+}
+
+.navDotActive .navDotIndicator {
+  background-color: #c9a96e;
+  box-shadow: 0 0 10px rgba(201, 169, 110, 0.45);
+  border-radius: 2px;
+  transform: rotate(45deg);
+  width: 6px;
+  height: 6px;
+}
+
+.navDotLabel {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0);
+  white-space: nowrap;
+  transition: color 0.3s ease;
+  pointer-events: none;
+}
+
+.navDot:hover .navDotLabel {
+  color: rgba(245, 245, 245, 0.4);
+}
+
+.navDotActive .navDotLabel {
+  color: #c9a96e;
+}
+
+/* ── Hero ── */
+
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 640px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0a0a0a;
+  overflow: hidden;
+}
+
+.heroGlow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201, 169, 110, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 50% 100%, rgba(201, 169, 110, 0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 32px;
+}
+
+/* ── Shared atoms ── */
+
+.eyebrow {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  margin-bottom: 24px;
+}
+
+.separators {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 36px;
+}
+
+.sepLine {
+  display: inline-block;
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(201, 169, 110, 0.5));
+}
+
+.separators .sepLine:last-child {
+  background: linear-gradient(to left, transparent, rgba(201, 169, 110, 0.5));
+}
+
+.diamond {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background-color: #c9a96e;
+  transform: rotate(45deg);
+  opacity: 0.7;
+}
+
+.diamond:nth-child(3) {
+  width: 7px;
+  height: 7px;
+  opacity: 1;
+}
+
+/* ── Hero typography ── */
+
+.heroTitle {
+  font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  font-size: clamp(88px, 13vw, 168px);
+  font-weight: 300;
+  line-height: 0.88;
+  color: #f5f5f5;
+  letter-spacing: -0.03em;
+  margin-bottom: 36px;
+}
+
+.heroAccent {
+  color: #c9a96e;
+  font-style: italic;
+}
+
+.heroSub {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.85;
+  color: rgba(245, 245, 245, 0.4);
+  letter-spacing: 0.02em;
+  margin-bottom: 64px;
+}
+
+.scrollHint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.scrollLine {
+  display: block;
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(to bottom, rgba(201, 169, 110, 0.6), transparent);
+  animation: scrollPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.35; transform: scaleY(0.9); }
+  50% { opacity: 1; transform: scaleY(1); }
+}
+
+.scrollText {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.2);
+}
+
+/* ── Service Panel ── */
+
+.panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 86vh;
+  border-top: 1px solid rgba(245, 245, 245, 0.04);
+}
+
+/* Alternating: reversed panels push image to right */
+.panelReverse .panelImageWrap {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.panelReverse .panelContent {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+/* ── Panel image ── */
+
+.panelImageWrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.panelImg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.8s ease;
+  filter: grayscale(25%);
+}
+
+.panel:hover .panelImg {
+  transform: scale(1.06);
+  filter: grayscale(0%);
+}
+
+.panelImgOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(6, 6, 6, 0.28) 0%,
+    rgba(6, 6, 6, 0.08) 100%
+  );
+  transition: background 0.6s ease;
+}
+
+.panelReverse .panelImgOverlay {
+  background: linear-gradient(
+    to left,
+    rgba(6, 6, 6, 0.28) 0%,
+    rgba(6, 6, 6, 0.08) 100%
+  );
+}
+
+.panel:hover .panelImgOverlay {
+  background: rgba(6, 6, 6, 0.12);
+}
+
+.panelBigNumber {
+  position: absolute;
+  bottom: 24px;
+  right: 28px;
+  font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  font-size: 130px;
+  font-weight: 300;
+  color: rgba(201, 169, 110, 0.1);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  pointer-events: none;
+  user-select: none;
+  transition: color 0.5s ease;
+}
+
+.panelReverse .panelBigNumber {
+  right: auto;
+  left: 28px;
+}
+
+.panel:hover .panelBigNumber {
+  color: rgba(201, 169, 110, 0.18);
+}
+
+/* ── Panel content ── */
+
+.panelContent {
+  background-color: #111111;
+  padding: 80px 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.panelEyebrow {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 110, 0.65);
+  margin-bottom: 20px;
+}
+
+.panelTitle {
+  font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  font-size: clamp(38px, 4.5vw, 62px);
+  font-weight: 400;
+  line-height: 1.05;
+  color: #f5f5f5;
+  letter-spacing: -0.01em;
+  margin-bottom: 24px;
+  transition: color 0.4s ease;
+}
+
+.panel:hover .panelTitle {
+  color: #c9a96e;
+}
+
+.panelDivider {
+  width: 28px;
+  height: 1px;
+  background-color: rgba(201, 169, 110, 0.45);
+  margin-bottom: 28px;
+  transition: width 0.6s ease;
+}
+
+.panel:hover .panelDivider {
+  width: 60px;
+}
+
+.panelDesc {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.9;
+  color: rgba(245, 245, 245, 0.42);
+  letter-spacing: 0.01em;
+  margin-bottom: 40px;
+  max-width: 420px;
+}
+
+/* ── Service chips ── */
+
+.chipList {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 44px;
+}
+
+.chip {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 20px;
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: 30px;
+  transition: all 0.35s ease;
+  cursor: default;
+}
+
+.chip:hover {
+  border-color: rgba(201, 169, 110, 0.6);
+  background: rgba(201, 169, 110, 0.05);
+  transform: translateY(-2px);
+}
+
+.chipName {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(245, 245, 245, 0.72);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.chip:hover .chipName {
+  color: #f5f5f5;
+}
+
+.chipPrice {
+  font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(201, 169, 110, 0.55);
+  letter-spacing: 0.06em;
+}
+
+/* ── Book button ── */
+
+.bookBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 36px;
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: 30px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 110, 0.7);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  align-self: flex-start;
+}
+
+.bookBtn svg {
+  transition: transform 0.3s ease;
+}
+
+.bookBtn:hover {
+  background: rgba(201, 169, 110, 0.08);
+  border-color: rgba(201, 169, 110, 0.7);
+  color: #c9a96e;
+}
+
+.bookBtn:hover svg {
+  transform: translateX(5px);
+}
+
+/* ── CTA ── */
+
+.cta {
+  position: relative;
+  background-color: #0a0a0a;
+  padding: 160px 60px;
+  overflow: hidden;
+}
+
+.ctaGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201, 169, 110, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.ctaInner {
+  position: relative;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-family: 'Cormorant Garamond', 'Times New Roman', serif;
+  font-size: clamp(48px, 7vw, 84px);
+  font-weight: 300;
+  line-height: 0.95;
+  color: #f5f5f5;
+  letter-spacing: -0.025em;
+  margin-bottom: 28px;
+}
+
+.ctaAccent {
+  color: #c9a96e;
+  font-style: italic;
+}
+
+.ctaBody {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(245, 245, 245, 0.38);
+  margin-bottom: 52px;
+  letter-spacing: 0.01em;
+}
+
+.ctaActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ctaPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 44px;
+  border: 1px solid rgba(201, 169, 110, 0.45);
+  border-radius: 30px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  text-decoration: none;
+  background: rgba(201, 169, 110, 0.06);
+  transition: all 0.4s ease;
+}
+
+.ctaPrimary svg {
+  transition: transform 0.3s ease;
+}
+
+.ctaPrimary:hover {
+  background: rgba(201, 169, 110, 0.14);
+  border-color: rgba(201, 169, 110, 0.8);
+}
+
+.ctaPrimary:hover svg {
+  transform: translateX(5px);
+}
+
+.ctaSecondary {
+  display: inline-block;
+  padding: 18px 44px;
+  border: 1px solid rgba(245, 245, 245, 0.12);
+  border-radius: 30px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.38);
+  text-decoration: none;
+  transition: all 0.4s ease;
+}
+
+.ctaSecondary:hover {
+  border-color: rgba(245, 245, 245, 0.35);
+  color: #f5f5f5;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 1100px) {
+  .panelContent {
+    padding: 64px 52px;
+  }
+
+  .stickyNav {
+    left: 14px;
+  }
+
+  .navDotLabel {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .stickyNav {
+    display: none;
+  }
+
+  .panel {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .panelReverse .panelImageWrap {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .panelReverse .panelContent {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .panelImageWrap {
+    height: 340px;
+  }
+
+  .panelImg {
+    position: absolute;
+  }
+
+  .panelBigNumber {
+    font-size: 88px;
+  }
+
+  .panelContent {
+    padding: 48px 28px;
+  }
+
+  .panelDesc {
+    max-width: 100%;
+  }
+
+  .heroTitle {
+    font-size: clamp(64px, 18vw, 100px);
+  }
+
+  .cta {
+    padding: 100px 28px;
+  }
+}

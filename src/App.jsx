@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import MainLayout from './layouts/MainLayout'
 import HomePage from './pages/HomePage'
 import BarberDetailPage from './pages/BarberDetailPage'
+import ServicesPage from './pages/ServicesPage'
 import AuthPage from './pages/AuthPage'
 import DashboardPage from './pages/DashboardPage'
 
@@ -20,6 +21,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/barbers/:id" element={<BarberDetailPage />} />
+          <Route path="/services" element={<ServicesPage />} />
         </Route>
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
