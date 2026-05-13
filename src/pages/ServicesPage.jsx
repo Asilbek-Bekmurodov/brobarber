@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import styles from './ServicesPage.module.css'
 
@@ -81,6 +81,7 @@ const SERVICES = [
 ]
 
 const ServicesPage = () => {
+  const navigate = useNavigate()
   const [activeSection, setActiveSection] = useState(0)
   const sectionRefs = useRef([])
 
@@ -184,7 +185,7 @@ const ServicesPage = () => {
                 ))}
               </ul>
 
-              <button className={styles.bookBtn}>
+              <button className={styles.bookBtn} onClick={() => navigate(`/booking?service=${encodeURIComponent(service.title)}`)}>
                 Book this service
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12" />
@@ -216,7 +217,7 @@ const ServicesPage = () => {
             Your best look is one appointment away.
           </p>
           <div className={styles.ctaActions}>
-            <Link to="/" className={styles.ctaPrimary}>
+            <Link to="/booking" className={styles.ctaPrimary}>
               Book Your Appointment
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12" />
