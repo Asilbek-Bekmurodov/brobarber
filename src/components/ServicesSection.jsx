@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import styles from './ServicesSection.module.css'
 
 const SERVICES = [
@@ -97,7 +98,7 @@ const ServicesSection = () => {
 
         <div className={styles.grid}>
           {SERVICES.map((service) => (
-            <div key={service.id} className={styles.card}>
+            <Link key={service.id} to="/services" className={styles.card} style={{ textDecoration: 'none' }}>
               <div
                 className={styles.cardBg}
                 style={{ backgroundImage: `url(${service.image})` }}
@@ -122,22 +123,22 @@ const ServicesSection = () => {
                   ))}
                 </ul>
 
-                <button className={styles.bookBtn}>
+                <span className={styles.bookBtn}>
                   Book Now
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12" />
                     <polyline points="12 5 19 12 12 19" />
                   </svg>
-                </button>
+                </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
         <div className={styles.footer}>
-          <button className={styles.allServicesBtn}>
+          <Link to="/services" className={styles.allServicesBtn} style={{ textDecoration: 'none', display: 'inline-block' }}>
             View All Services
-          </button>
+          </Link>
         </div>
 
       </div>
