@@ -1,38 +1,9 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { logout } from '../store/authSlice'
+import api from '../lib/api'
 import styles from './DashboardPage.module.css'
-
-// ── Mock Data ──────────────────────────────────────────────────────────────
-
-const INITIAL_USERS = [
-  { id: 1, name: 'James Harrington', phone: '+1 (212) 555-0101', role: 'Client', joined: '2024-01-15' },
-  { id: 2, name: 'Sofia Delacroix', phone: '+1 (212) 555-0182', role: 'Client', joined: '2024-02-03' },
-  { id: 3, name: 'Marcus Webb', phone: '+1 (212) 555-0234', role: 'Admin', joined: '2023-11-20' },
-  { id: 4, name: 'Elena Vasquez', phone: '+1 (212) 555-0319', role: 'Client', joined: '2024-03-11' },
-  { id: 5, name: 'Thomas Aldridge', phone: '+1 (212) 555-0472', role: 'Client', joined: '2024-04-07' },
-  { id: 6, name: 'Naomi Okafor', phone: '+1 (212) 555-0568', role: 'Manager', joined: '2023-09-14' },
-  { id: 7, name: 'Luca Ferrante', phone: '+1 (212) 555-0621', role: 'Client', joined: '2024-05-22' },
-  { id: 8, name: 'Claire Beaumont', phone: '+1 (212) 555-0789', role: 'Client', joined: '2024-01-30' },
-]
-
-const INITIAL_BARBERS = [
-  { id: 1, name: 'James Wilson', role: 'Master Barber', experience: '14 Years', specialty: 'Classic Cuts & Hot Towel Shaves', status: 'Active' },
-  { id: 2, name: 'Marcus Reed', role: 'Senior Barber', experience: '9 Years', specialty: 'Fades, Tapers & Beard Design', status: 'Active' },
-  { id: 3, name: 'Daniel Hayes', role: 'Color Specialist', experience: '7 Years', specialty: 'Color, Highlights & Treatments', status: 'Active' },
-  { id: 4, name: 'Elijah Cross', role: 'Junior Barber', experience: '3 Years', specialty: 'Modern Cuts & Grooming', status: 'Active' },
-  { id: 5, name: 'Oscar Neville', role: 'Senior Barber', experience: '11 Years', specialty: 'Straight Razor & Traditional', status: 'Inactive' },
-]
-
-const INITIAL_SERVICES = [
-  { id: 1, title: 'Classic Haircut', category: 'Haircuts', price: '$45', duration: '45 min', status: 'Active' },
-  { id: 2, title: 'Skin Fade', category: 'Haircuts', price: '$55', duration: '60 min', status: 'Active' },
-  { id: 3, title: 'Beard Trim & Shape', category: 'Beard', price: '$30', duration: '30 min', status: 'Active' },
-  { id: 4, title: 'Hot Towel Shave', category: 'Shaving', price: '$65', duration: '60 min', status: 'Active' },
-  { id: 5, title: 'Full Color', category: 'Coloring', price: '$120', duration: '90 min', status: 'Active' },
-  { id: 6, title: 'Balayage & Highlights', category: 'Coloring', price: '$160', duration: '120 min', status: 'Active' },
-  { id: 7, title: 'Keratin Treatment', category: 'Treatments', price: '$200', duration: '120 min', status: 'Inactive' },
-  { id: 8, title: 'The Gentleman Package', category: 'Packages', price: '$95', duration: '90 min', status: 'Active' },
-  { id: 9, title: 'VIP Experience', category: 'Packages', price: '$180', duration: '150 min', status: 'Active' },
-]
 
 // ── Icons ──────────────────────────────────────────────────────────────────
 
@@ -114,10 +85,6 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
-function nextId(arr) {
-  return arr.length ? Math.max(...arr.map(r => r.id)) + 1 : 1
-}
-
 // ── Modal ──────────────────────────────────────────────────────────────────
 
 function Modal({ title, children, onClose }) {
@@ -170,20 +137,20 @@ function TableControls({ count, label, search, setSearch, sort, setSort }) {
 
 // ── Users Section ──────────────────────────────────────────────────────────
 
-const USER_ROLES = ['Client', 'Admin', 'Manager']
-
-const EMPTY_USER = { name: '', phone: '', role: 'Client', joined: '' }
-
-function UsersSection() {
-  const [rows, setRows] = useState(INITIAL_USERS)
+function UsersSection({ rows, onRefresh }) {
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('az')
-  const [modal, setModal] = useState(null) // null | { mode: 'add'|'edit', data }
   const [confirmDelete, setConfirmDelete] = useState(null)
-  const [form, setForm] = useState(EMPTY_USER)
 
   const filtered = useMemo(() => {
-    let r = rows.filter(u => u.name.toLowerCase().includes(search.toLowerCase()))
+    let r = rows.map(u => ({
+      id: u._id,
+      name: `${u.firstName} ${u.lastName}`,
+      phone: u.phoneNumber,
+      role: u.role.charAt(0).toUpperCase() + u.role.slice(1),
+      joined: u.createdAt,
+    }))
+    r = r.filter(u => u.name.toLowerCase().includes(search.toLowerCase()))
     if (sort === 'az') r = [...r].sort((a, b) => a.name.localeCompare(b.name))
     if (sort === 'za') r = [...r].sort((a, b) => b.name.localeCompare(a.name))
     if (sort === 'newest') r = [...r].sort((a, b) => new Date(b.joined) - new Date(a.joined))
@@ -191,22 +158,13 @@ function UsersSection() {
     return r
   }, [rows, search, sort])
 
-  const openAdd = () => { setForm(EMPTY_USER); setModal({ mode: 'add' }) }
-  const openEdit = (row) => { setForm({ ...row }); setModal({ mode: 'edit', id: row.id }) }
-  const closeModal = () => setModal(null)
-
-  const handleSave = () => {
-    if (!form.name.trim()) return
-    if (modal.mode === 'add') {
-      setRows(r => [...r, { ...form, id: nextId(r) }])
-    } else {
-      setRows(r => r.map(u => u.id === modal.id ? { ...form, id: modal.id } : u))
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/users/${id}`)
+      onRefresh()
+    } catch (err) {
+      console.error('Delete failed:', err)
     }
-    closeModal()
-  }
-
-  const handleDelete = (id) => {
-    setRows(r => r.filter(u => u.id !== id))
     setConfirmDelete(null)
   }
 
@@ -217,7 +175,6 @@ function UsersSection() {
           <h2 className={styles.sectionTitle}>Users</h2>
           <p className={styles.sectionSub}>Manage registered accounts and roles</p>
         </div>
-        <button className={styles.addBtn} onClick={openAdd}><IconPlus /> Add User</button>
       </div>
 
       <TableControls count={filtered.length} label="users" search={search} setSearch={setSearch} sort={sort} setSort={setSort} />
@@ -252,7 +209,6 @@ function UsersSection() {
                   <td className={styles.mutedCell}>{formatDate(row.joined)}</td>
                   <td>
                     <div className={styles.actions}>
-                      <button className={styles.editBtn} onClick={() => openEdit(row)}><IconEdit /> Edit</button>
                       <button className={styles.deleteBtn} onClick={() => setConfirmDelete(row.id)}><IconTrash /></button>
                     </div>
                   </td>
@@ -265,81 +221,30 @@ function UsersSection() {
           </tbody>
         </table>
       </div>
-
-      {modal && (
-        <Modal title={modal.mode === 'add' ? 'Add User' : 'Edit User'} onClose={closeModal}>
-          <div className={styles.formGrid}>
-            <div className={styles.formField}>
-              <label>Full Name</label>
-              <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="James Harrington" />
-            </div>
-            <div className={styles.formField}>
-              <label>Phone Number</label>
-              <input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="+1 (212) 555-0000" />
-            </div>
-            <div className={styles.formField}>
-              <label>Role</label>
-              <div className={styles.selectWrap}>
-                <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}>
-                  {USER_ROLES.map(r => <option key={r}>{r}</option>)}
-                </select>
-                <span className={styles.selectChevron}><IconChevron /></span>
-              </div>
-            </div>
-            <div className={styles.formField}>
-              <label>Joined Date</label>
-              <input type="date" value={form.joined} onChange={e => setForm(f => ({ ...f, joined: e.target.value }))} />
-            </div>
-          </div>
-          <div className={styles.modalFooter}>
-            <button className={styles.cancelBtn} onClick={closeModal}>Cancel</button>
-            <button className={styles.saveBtn} onClick={handleSave}>
-              {modal.mode === 'add' ? 'Add User' : 'Save Changes'}
-            </button>
-          </div>
-        </Modal>
-      )}
     </section>
   )
 }
 
 // ── Barbers Section ────────────────────────────────────────────────────────
 
-const BARBER_ROLES = ['Master Barber', 'Senior Barber', 'Junior Barber', 'Color Specialist']
-const EMPTY_BARBER = { name: '', role: 'Senior Barber', experience: '', specialty: '', status: 'Active' }
-
-function BarbersSection() {
-  const [rows, setRows] = useState(INITIAL_BARBERS)
+function BarbersSection({ rows }) {
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('az')
-  const [modal, setModal] = useState(null)
-  const [confirmDelete, setConfirmDelete] = useState(null)
-  const [form, setForm] = useState(EMPTY_BARBER)
 
   const filtered = useMemo(() => {
-    let r = rows.filter(u => u.name.toLowerCase().includes(search.toLowerCase()))
+    let r = rows.map(b => ({
+      id: b._id,
+      name: `${b.firstName} ${b.lastName}`,
+      role: b.role,
+      experience: '',
+      specialty: b.bio || '—',
+      status: 'Active',
+    }))
+    r = r.filter(b => b.name.toLowerCase().includes(search.toLowerCase()))
     if (sort === 'az') r = [...r].sort((a, b) => a.name.localeCompare(b.name))
     if (sort === 'za') r = [...r].sort((a, b) => b.name.localeCompare(a.name))
-    if (sort === 'newest') r = [...r].sort((a, b) => b.id - a.id)
-    if (sort === 'oldest') r = [...r].sort((a, b) => a.id - b.id)
     return r
   }, [rows, search, sort])
-
-  const openAdd = () => { setForm(EMPTY_BARBER); setModal({ mode: 'add' }) }
-  const openEdit = (row) => { setForm({ ...row }); setModal({ mode: 'edit', id: row.id }) }
-  const closeModal = () => setModal(null)
-
-  const handleSave = () => {
-    if (!form.name.trim()) return
-    if (modal.mode === 'add') {
-      setRows(r => [...r, { ...form, id: nextId(r) }])
-    } else {
-      setRows(r => r.map(u => u.id === modal.id ? { ...form, id: modal.id } : u))
-    }
-    closeModal()
-  }
-
-  const handleDelete = (id) => { setRows(r => r.filter(u => u.id !== id)); setConfirmDelete(null) }
 
   return (
     <section className={styles.section}>
@@ -348,7 +253,6 @@ function BarbersSection() {
           <h2 className={styles.sectionTitle}>Barbers</h2>
           <p className={styles.sectionSub}>Manage team members and their profiles</p>
         </div>
-        <button className={styles.addBtn} onClick={openAdd}><IconPlus /> Add Barber</button>
       </div>
 
       <TableControls count={filtered.length} label="barbers" search={search} setSearch={setSearch} sort={sort} setSort={setSort} />
@@ -356,125 +260,47 @@ function BarbersSection() {
       <div className={styles.tableWrap}>
         <table className={styles.table}>
           <thead>
-            <tr><th>#</th><th>Name</th><th>Role</th><th>Experience</th><th>Specialty</th><th>Status</th><th>Actions</th></tr>
+            <tr><th>#</th><th>Name</th><th>Role</th><th>Experience</th><th>Specialty</th><th>Status</th></tr>
           </thead>
           <tbody>
             {filtered.map((row, i) => (
-              confirmDelete === row.id ? (
-                <tr key={row.id} className={styles.deleteRow}>
-                  <td colSpan={7}>
-                    <div className={styles.deleteConfirm}>
-                      <span>Delete <strong>{row.name}</strong>?</span>
-                      <div className={styles.deleteActions}>
-                        <button className={styles.confirmDeleteBtn} onClick={() => handleDelete(row.id)}>Delete</button>
-                        <button className={styles.cancelDeleteBtn} onClick={() => setConfirmDelete(null)}>Cancel</button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                <tr key={row.id}>
-                  <td className={styles.rowNum}>{i + 1}</td>
-                  <td className={styles.nameCell}>{row.name}</td>
-                  <td className={styles.mutedCell}>{row.role}</td>
-                  <td className={styles.mutedCell}>{row.experience}</td>
-                  <td className={styles.mutedCell}>{row.specialty}</td>
-                  <td><span className={`${styles.statusBadge} ${row.status === 'Active' ? styles.statusActive : styles.statusInactive}`}>{row.status}</span></td>
-                  <td>
-                    <div className={styles.actions}>
-                      <button className={styles.editBtn} onClick={() => openEdit(row)}><IconEdit /> Edit</button>
-                      <button className={styles.deleteBtn} onClick={() => setConfirmDelete(row.id)}><IconTrash /></button>
-                    </div>
-                  </td>
-                </tr>
-              )
+              <tr key={row.id}>
+                <td className={styles.rowNum}>{i + 1}</td>
+                <td className={styles.nameCell}>{row.name}</td>
+                <td className={styles.mutedCell}>{row.role}</td>
+                <td className={styles.mutedCell}>{row.experience}</td>
+                <td className={styles.mutedCell}>{row.specialty}</td>
+                <td><span className={`${styles.statusBadge} ${row.status === 'Active' ? styles.statusActive : styles.statusInactive}`}>{row.status}</span></td>
+              </tr>
             ))}
-            {filtered.length === 0 && <tr><td colSpan={7} className={styles.emptyRow}>No barbers found</td></tr>}
+            {filtered.length === 0 && <tr><td colSpan={6} className={styles.emptyRow}>No barbers found</td></tr>}
           </tbody>
         </table>
       </div>
-
-      {modal && (
-        <Modal title={modal.mode === 'add' ? 'Add Barber' : 'Edit Barber'} onClose={closeModal}>
-          <div className={styles.formGrid}>
-            <div className={styles.formField}>
-              <label>Full Name</label>
-              <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="James Wilson" />
-            </div>
-            <div className={styles.formField}>
-              <label>Role</label>
-              <div className={styles.selectWrap}>
-                <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}>
-                  {BARBER_ROLES.map(r => <option key={r}>{r}</option>)}
-                </select>
-                <span className={styles.selectChevron}><IconChevron /></span>
-              </div>
-            </div>
-            <div className={styles.formField}>
-              <label>Experience</label>
-              <input value={form.experience} onChange={e => setForm(f => ({ ...f, experience: e.target.value }))} placeholder="e.g. 9 Years" />
-            </div>
-            <div className={styles.formField}>
-              <label>Specialty</label>
-              <input value={form.specialty} onChange={e => setForm(f => ({ ...f, specialty: e.target.value }))} placeholder="e.g. Fades & Tapers" />
-            </div>
-            <div className={styles.formField}>
-              <label>Status</label>
-              <div className={styles.selectWrap}>
-                <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
-                  <option>Active</option><option>Inactive</option>
-                </select>
-                <span className={styles.selectChevron}><IconChevron /></span>
-              </div>
-            </div>
-          </div>
-          <div className={styles.modalFooter}>
-            <button className={styles.cancelBtn} onClick={closeModal}>Cancel</button>
-            <button className={styles.saveBtn} onClick={handleSave}>{modal.mode === 'add' ? 'Add Barber' : 'Save Changes'}</button>
-          </div>
-        </Modal>
-      )}
     </section>
   )
 }
 
 // ── Services Section ───────────────────────────────────────────────────────
 
-const SERVICE_CATEGORIES = ['Haircuts', 'Beard', 'Shaving', 'Coloring', 'Treatments', 'Packages']
-const EMPTY_SERVICE = { title: '', category: 'Haircuts', price: '', duration: '', status: 'Active' }
-
-function ServicesSection() {
-  const [rows, setRows] = useState(INITIAL_SERVICES)
+function ServicesSection({ rows }) {
   const [search, setSearch] = useState('')
   const [sort, setSort] = useState('az')
-  const [modal, setModal] = useState(null)
-  const [confirmDelete, setConfirmDelete] = useState(null)
-  const [form, setForm] = useState(EMPTY_SERVICE)
 
   const filtered = useMemo(() => {
-    let r = rows.filter(u => u.title.toLowerCase().includes(search.toLowerCase()))
+    let r = rows.map(s => ({
+      id: s._id,
+      title: s.name,
+      category: '—',
+      price: `$${s.price}`,
+      duration: `${s.duration} min`,
+      status: 'Active',
+    }))
+    r = r.filter(s => s.title.toLowerCase().includes(search.toLowerCase()))
     if (sort === 'az') r = [...r].sort((a, b) => a.title.localeCompare(b.title))
     if (sort === 'za') r = [...r].sort((a, b) => b.title.localeCompare(a.title))
-    if (sort === 'newest') r = [...r].sort((a, b) => b.id - a.id)
-    if (sort === 'oldest') r = [...r].sort((a, b) => a.id - b.id)
     return r
   }, [rows, search, sort])
-
-  const openAdd = () => { setForm(EMPTY_SERVICE); setModal({ mode: 'add' }) }
-  const openEdit = (row) => { setForm({ ...row }); setModal({ mode: 'edit', id: row.id }) }
-  const closeModal = () => setModal(null)
-
-  const handleSave = () => {
-    if (!form.title.trim()) return
-    if (modal.mode === 'add') {
-      setRows(r => [...r, { ...form, id: nextId(r) }])
-    } else {
-      setRows(r => r.map(u => u.id === modal.id ? { ...form, id: modal.id } : u))
-    }
-    closeModal()
-  }
-
-  const handleDelete = (id) => { setRows(r => r.filter(u => u.id !== id)); setConfirmDelete(null) }
 
   return (
     <section className={styles.section}>
@@ -483,7 +309,6 @@ function ServicesSection() {
           <h2 className={styles.sectionTitle}>Services</h2>
           <p className={styles.sectionSub}>Manage the service catalogue and pricing</p>
         </div>
-        <button className={styles.addBtn} onClick={openAdd}><IconPlus /> Add Service</button>
       </div>
 
       <TableControls count={filtered.length} label="services" search={search} setSearch={setSearch} sort={sort} setSort={setSort} />
@@ -491,97 +316,35 @@ function ServicesSection() {
       <div className={styles.tableWrap}>
         <table className={styles.table}>
           <thead>
-            <tr><th>#</th><th>Title</th><th>Category</th><th>Price</th><th>Duration</th><th>Status</th><th>Actions</th></tr>
+            <tr><th>#</th><th>Title</th><th>Category</th><th>Price</th><th>Duration</th><th>Status</th></tr>
           </thead>
           <tbody>
             {filtered.map((row, i) => (
-              confirmDelete === row.id ? (
-                <tr key={row.id} className={styles.deleteRow}>
-                  <td colSpan={7}>
-                    <div className={styles.deleteConfirm}>
-                      <span>Delete <strong>{row.title}</strong>?</span>
-                      <div className={styles.deleteActions}>
-                        <button className={styles.confirmDeleteBtn} onClick={() => handleDelete(row.id)}>Delete</button>
-                        <button className={styles.cancelDeleteBtn} onClick={() => setConfirmDelete(null)}>Cancel</button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                <tr key={row.id}>
-                  <td className={styles.rowNum}>{i + 1}</td>
-                  <td className={styles.nameCell}>{row.title}</td>
-                  <td><span className={styles.categoryBadge}>{row.category}</span></td>
-                  <td className={styles.priceCell}>{row.price}</td>
-                  <td className={styles.mutedCell}>{row.duration}</td>
-                  <td><span className={`${styles.statusBadge} ${row.status === 'Active' ? styles.statusActive : styles.statusInactive}`}>{row.status}</span></td>
-                  <td>
-                    <div className={styles.actions}>
-                      <button className={styles.editBtn} onClick={() => openEdit(row)}><IconEdit /> Edit</button>
-                      <button className={styles.deleteBtn} onClick={() => setConfirmDelete(row.id)}><IconTrash /></button>
-                    </div>
-                  </td>
-                </tr>
-              )
+              <tr key={row.id}>
+                <td className={styles.rowNum}>{i + 1}</td>
+                <td className={styles.nameCell}>{row.title}</td>
+                <td><span className={styles.categoryBadge}>{row.category}</span></td>
+                <td className={styles.priceCell}>{row.price}</td>
+                <td className={styles.mutedCell}>{row.duration}</td>
+                <td><span className={`${styles.statusBadge} ${row.status === 'Active' ? styles.statusActive : styles.statusInactive}`}>{row.status}</span></td>
+              </tr>
             ))}
-            {filtered.length === 0 && <tr><td colSpan={7} className={styles.emptyRow}>No services found</td></tr>}
+            {filtered.length === 0 && <tr><td colSpan={6} className={styles.emptyRow}>No services found</td></tr>}
           </tbody>
         </table>
       </div>
-
-      {modal && (
-        <Modal title={modal.mode === 'add' ? 'Add Service' : 'Edit Service'} onClose={closeModal}>
-          <div className={styles.formGrid}>
-            <div className={styles.formField}>
-              <label>Service Title</label>
-              <input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Classic Haircut" />
-            </div>
-            <div className={styles.formField}>
-              <label>Category</label>
-              <div className={styles.selectWrap}>
-                <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
-                  {SERVICE_CATEGORIES.map(c => <option key={c}>{c}</option>)}
-                </select>
-                <span className={styles.selectChevron}><IconChevron /></span>
-              </div>
-            </div>
-            <div className={styles.formField}>
-              <label>Price</label>
-              <input value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} placeholder="$45" />
-            </div>
-            <div className={styles.formField}>
-              <label>Duration</label>
-              <input value={form.duration} onChange={e => setForm(f => ({ ...f, duration: e.target.value }))} placeholder="45 min" />
-            </div>
-            <div className={styles.formField}>
-              <label>Status</label>
-              <div className={styles.selectWrap}>
-                <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))}>
-                  <option>Active</option><option>Inactive</option>
-                </select>
-                <span className={styles.selectChevron}><IconChevron /></span>
-              </div>
-            </div>
-          </div>
-          <div className={styles.modalFooter}>
-            <button className={styles.cancelBtn} onClick={closeModal}>Cancel</button>
-            <button className={styles.saveBtn} onClick={handleSave}>{modal.mode === 'add' ? 'Add Service' : 'Save Changes'}</button>
-          </div>
-        </Modal>
-      )}
     </section>
   )
 }
 
 // ── Stats Overview ─────────────────────────────────────────────────────────
 
-function OverviewSection({ users, barbers, services }) {
-  const activeServices = services.filter(s => s.status === 'Active').length
+function OverviewSection({ users, barbers, services, bookings }) {
   const stats = [
     { label: 'Total Users', value: users.length, icon: <IconUsers />, note: 'Registered accounts' },
     { label: 'Total Barbers', value: barbers.length, icon: <IconScissors />, note: 'Team members' },
-    { label: 'Active Services', value: activeServices, icon: <IconList />, note: `of ${services.length} in catalogue` },
-    { label: 'Appointments Today', value: 7, icon: <IconCalendar />, note: 'Scheduled for today' },
+    { label: 'Active Services', value: services.length, icon: <IconList />, note: 'In catalogue' },
+    { label: 'Total Bookings', value: bookings.length, icon: <IconCalendar />, note: 'All time' },
   ]
   return (
     <section className={styles.overviewSection}>
@@ -617,7 +380,42 @@ const NAV_ITEMS = [
 ]
 
 export default function DashboardPage() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { user } = useSelector((s) => s.auth)
   const [active, setActive] = useState('overview')
+  const [users, setUsers] = useState([])
+  const [barbers, setBarbers] = useState([])
+  const [services, setServices] = useState([])
+  const [bookings, setBookings] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const fetchAll = useCallback(async () => {
+    setLoading(true)
+    try {
+      const [usersRes, barbersRes, servicesRes, bookingsRes] = await Promise.all([
+        api.get('/users'),
+        api.get('/barbers'),
+        api.get('/services'),
+        api.get('/bookings'),
+      ])
+      setUsers(usersRes.data.users)
+      setBarbers(barbersRes.data.barbers)
+      setServices(servicesRes.data.services)
+      setBookings(bookingsRes.data.bookings)
+    } catch (err) {
+      console.error('Failed to load dashboard data:', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => { fetchAll() }, [fetchAll])
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate('/')
+  }
 
   return (
     <div className={styles.root}>
@@ -642,13 +440,13 @@ export default function DashboardPage() {
         </div>
         <div className={styles.sidebarBottom}>
           <div className={styles.profileRow}>
-            <div className={styles.avatar}>M</div>
+            <div className={styles.avatar}>{user?.firstName?.[0]?.toUpperCase() || 'A'}</div>
             <div className={styles.profileInfo}>
-              <span className={styles.profileName}>Marcus Webb</span>
-              <span className={styles.profileRole}>Administrator</span>
+              <span className={styles.profileName}>{`${user?.firstName || ''} ${user?.lastName || ''}`.trim()}</span>
+              <span className={styles.profileRole}>{user?.role || 'Admin'}</span>
             </div>
           </div>
-          <button className={styles.logoutBtn}><IconLogout /> Sign out</button>
+          <button className={styles.logoutBtn} onClick={handleLogout}><IconLogout /> Sign out</button>
         </div>
       </aside>
 
@@ -670,16 +468,18 @@ export default function DashboardPage() {
         </header>
 
         <div className={styles.content}>
-          {active === 'overview' && (
-            <OverviewSection
-              users={INITIAL_USERS}
-              barbers={INITIAL_BARBERS}
-              services={INITIAL_SERVICES}
-            />
+          {loading ? (
+            <div style={{ padding: '40px', textAlign: 'center', color: '#888', fontSize: '14px' }}>Loading…</div>
+          ) : (
+            <>
+              {active === 'overview' && (
+                <OverviewSection users={users} barbers={barbers} services={services} bookings={bookings} />
+              )}
+              {active === 'users' && <UsersSection rows={users} onRefresh={fetchAll} />}
+              {active === 'barbers' && <BarbersSection rows={barbers} />}
+              {active === 'services' && <ServicesSection rows={services} />}
+            </>
           )}
-          {active === 'users' && <UsersSection />}
-          {active === 'barbers' && <BarbersSection />}
-          {active === 'services' && <ServicesSection />}
         </div>
       </main>
     </div>
