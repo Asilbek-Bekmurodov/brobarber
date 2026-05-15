@@ -1,17 +1,33 @@
 import { useState, useEffect } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { login, register, clearError } from '../store/authSlice'
 import styles from './AuthPage.module.css'
 
 const AuthPage = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { loading, error, user } = useSelector((s) => s.auth)
+
   const [searchParams, setSearchParams] = useSearchParams()
   const [tab, setTab] = useState(searchParams.get('tab') || 'login')
   const [animating, setAnimating] = useState(false)
 
-  const [loginPhone, setLoginPhone] = useState('')
+  const [loginPhone, setLoginPhone] = useState('+998')
+  const [loginPassword, setLoginPassword] = useState('')
+
   const [regFirstName, setRegFirstName] = useState('')
   const [regLastName, setRegLastName] = useState('')
-  const [regPhone, setRegPhone] = useState('')
-  const [regRole, setRegRole] = useState('user')
+  const [regPhone, setRegPhone] = useState('+998')
+  const [regPassword, setRegPassword] = useState('')
+
+  useEffect(() => {
+    if (user) navigate('/')
+  }, [user, navigate])
+
+  useEffect(() => {
+    dispatch(clearError())
+  }, [tab, dispatch])
 
   const switchTab = (newTab) => {
     if (newTab === tab) return
@@ -29,18 +45,41 @@ const AuthPage = () => {
   }, [searchParams])
 
   const formatPhone = (value) => {
-    const digits = value.replace(/\D/g, '').slice(0, 11)
-    if (digits.length <= 1) return digits
-    if (digits.length <= 4) return `+${digits.slice(0, 1)} (${digits.slice(1)}`
-    if (digits.length <= 7) return `+${digits.slice(0, 1)} (${digits.slice(1, 4)}) ${digits.slice(4)}`
-    if (digits.length <= 9) return `+${digits.slice(0, 1)} (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`
-    return `+${digits.slice(0, 1)} (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7, 9)}-${digits.slice(9, 11)}`
+    const raw = value.replace(/\D/g, '')
+    if (raw.length <= 3) return '+' + raw
+    const digits = raw.slice(3, 12)
+    if (digits.length === 0) return '+998'
+    if (digits.length <= 2) return `+998 ${digits}`
+    if (digits.length <= 5) return `+998 ${digits.slice(0, 2)} ${digits.slice(2)}`
+    if (digits.length <= 7) return `+998 ${digits.slice(0, 2)} ${digits.slice(2, 5)}-${digits.slice(5)}`
+    return `+998 ${digits.slice(0, 2)} ${digits.slice(2, 5)}-${digits.slice(5, 7)}-${digits.slice(7, 9)}`
+  }
+
+  const toApiPhone = (formatted) => '+' + formatted.replace(/\D/g, '')
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault()
+    const result = await dispatch(login({
+      phoneNumber: toApiPhone(loginPhone),
+      password: loginPassword,
+    }))
+    if (!result.error) navigate('/')
+  }
+
+  const handleRegisterSubmit = async (e) => {
+    e.preventDefault()
+    const result = await dispatch(register({
+      firstName: regFirstName,
+      lastName: regLastName,
+      phoneNumber: toApiPhone(regPhone),
+      password: regPassword,
+    }))
+    if (!result.error) navigate('/')
   }
 
   return (
     <div className={styles.page}>
 
-      {/* ── Left Panel ── */}
       <div className={styles.left}>
         <div className={styles.leftBg} />
         <div className={styles.leftOverlay} />
@@ -51,12 +90,11 @@ const AuthPage = () => {
             The art of the<br />perfect cut.
           </p>
           <div className={styles.brandFooter}>
-            <span className={styles.brandAddr}>198 West 21st Street, New York</span>
+            <span className={styles.brandAddr}>Toshkent, O'zbekiston</span>
           </div>
         </div>
       </div>
 
-      {/* ── Right Panel ── */}
       <div className={styles.right}>
         <Link to="/" className={styles.backLink}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -68,36 +106,27 @@ const AuthPage = () => {
 
         <div className={styles.formWrap}>
 
-          {/* Tabs */}
           <div className={styles.tabs}>
-            <button
-              className={`${styles.tabBtn} ${tab === 'login' ? styles.tabActive : ''}`}
-              onClick={() => switchTab('login')}
-            >
-              Sign In
-            </button>
-            <button
-              className={`${styles.tabBtn} ${tab === 'register' ? styles.tabActive : ''}`}
-              onClick={() => switchTab('register')}
-            >
-              Register
-            </button>
+            <button className={`${styles.tabBtn} ${tab === 'login' ? styles.tabActive : ''}`} onClick={() => switchTab('login')}>Sign In</button>
+            <button className={`${styles.tabBtn} ${tab === 'register' ? styles.tabActive : ''}`} onClick={() => switchTab('register')}>Register</button>
           </div>
-
           <div className={styles.tabIndicatorWrap}>
             <div className={`${styles.tabIndicator} ${tab === 'register' ? styles.tabIndicatorRight : ''}`} />
           </div>
 
-          {/* Form */}
+          {error && (
+            <div style={{ color: '#ef4444', fontSize: '13px', marginBottom: '8px', padding: '8px 12px', background: 'rgba(239,68,68,0.08)', borderRadius: '6px' }}>
+              {error}
+            </div>
+          )}
+
           <div className={`${styles.formInner} ${animating ? styles.formFading : ''}`}>
 
             {tab === 'login' ? (
-              <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+              <form className={styles.form} onSubmit={handleLoginSubmit}>
                 <div className={styles.formHeader}>
                   <h1 className={styles.formTitle}>Welcome back.</h1>
-                  <p className={styles.formSubtitle}>
-                    Enter your phone number to sign in to your account.
-                  </p>
+                  <p className={styles.formSubtitle}>Enter your phone and password to sign in.</p>
                 </div>
 
                 <div className={styles.fields}>
@@ -113,93 +142,69 @@ const AuthPage = () => {
                         id="login-phone"
                         type="tel"
                         className={styles.input}
-                        placeholder="+1 (000) 000-00-00"
+                        placeholder="+998 90 123-45-67"
                         value={loginPhone}
                         onChange={(e) => setLoginPhone(formatPhone(e.target.value))}
                         required
                       />
                     </div>
                   </div>
+                  <div className={styles.field}>
+                    <label className={styles.label} htmlFor="login-password">Password</label>
+                    <div className={styles.inputWrap}>
+                      <span className={styles.inputIcon}>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                          <path d="M7 11V7a5 5 0 0110 0v4"/>
+                        </svg>
+                      </span>
+                      <input
+                        id="login-password"
+                        type="password"
+                        className={styles.input}
+                        placeholder="••••••••"
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                        required
+                        minLength={6}
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <button type="submit" className={styles.submitBtn}>
-                  Continue
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
+                <button type="submit" className={styles.submitBtn} disabled={loading}>
+                  {loading ? 'Signing in…' : 'Sign In'}
+                  {!loading && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  )}
                 </button>
 
                 <p className={styles.switchHint}>
                   Don't have an account?{' '}
-                  <button type="button" className={styles.switchBtn} onClick={() => switchTab('register')}>
-                    Register
-                  </button>
+                  <button type="button" className={styles.switchBtn} onClick={() => switchTab('register')}>Register</button>
                 </p>
               </form>
 
             ) : (
-              <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+              <form className={styles.form} onSubmit={handleRegisterSubmit}>
                 <div className={styles.formHeader}>
                   <h1 className={styles.formTitle}>Create account.</h1>
-                  <p className={styles.formSubtitle}>
-                    {regRole === 'barber'
-                      ? 'Join Trim. as a barber to manage your schedule and clients.'
-                      : 'Join Trim. to book appointments and manage your visits.'}
-                  </p>
+                  <p className={styles.formSubtitle}>Join Trim. to book appointments.</p>
                 </div>
 
                 <div className={styles.fields}>
-                  <div className={styles.field}>
-                    <span className={styles.label}>Register as</span>
-                    <div className={styles.roleSelector}>
-                      <button
-                        type="button"
-                        className={`${styles.roleCard} ${regRole === 'user' ? styles.roleCardActive : ''}`}
-                        onClick={() => setRegRole('user')}
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                          <circle cx="12" cy="7" r="4" />
-                        </svg>
-                        <span>Client</span>
-                      </button>
-                      <button
-                        type="button"
-                        className={`${styles.roleCard} ${regRole === 'barber' ? styles.roleCardActive : ''}`}
-                        onClick={() => setRegRole('barber')}
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="6" cy="6" r="3" />
-                          <circle cx="6" cy="18" r="3" />
-                          <line x1="20" y1="4" x2="8.12" y2="15.88" />
-                          <line x1="14.47" y1="14.48" x2="20" y2="20" />
-                          <line x1="8.12" y1="8.12" x2="12" y2="12" />
-                        </svg>
-                        <span>Barber</span>
-                      </button>
-                    </div>
-                  </div>
-
                   <div className={styles.fieldRow}>
                     <div className={styles.field}>
                       <label className={styles.label} htmlFor="reg-firstname">First Name</label>
                       <div className={styles.inputWrap}>
                         <span className={styles.inputIcon}>
                           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
                           </svg>
                         </span>
-                        <input
-                          id="reg-firstname"
-                          type="text"
-                          className={styles.input}
-                          placeholder="James"
-                          value={regFirstName}
-                          onChange={(e) => setRegFirstName(e.target.value)}
-                          required
-                        />
+                        <input id="reg-firstname" type="text" className={styles.input} placeholder="Ali" value={regFirstName} onChange={(e) => setRegFirstName(e.target.value)} required />
                       </div>
                     </div>
                     <div className={styles.field}>
@@ -207,19 +212,10 @@ const AuthPage = () => {
                       <div className={styles.inputWrap}>
                         <span className={styles.inputIcon}>
                           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
+                            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
                           </svg>
                         </span>
-                        <input
-                          id="reg-lastname"
-                          type="text"
-                          className={styles.input}
-                          placeholder="Wilson"
-                          value={regLastName}
-                          onChange={(e) => setRegLastName(e.target.value)}
-                          required
-                        />
+                        <input id="reg-lastname" type="text" className={styles.input} placeholder="Karimov" value={regLastName} onChange={(e) => setRegLastName(e.target.value)} required />
                       </div>
                     </div>
                   </div>
@@ -232,32 +228,36 @@ const AuthPage = () => {
                           <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
                         </svg>
                       </span>
-                      <input
-                        id="reg-phone"
-                        type="tel"
-                        className={styles.input}
-                        placeholder="+1 (000) 000-00-00"
-                        value={regPhone}
-                        onChange={(e) => setRegPhone(formatPhone(e.target.value))}
-                        required
-                      />
+                      <input id="reg-phone" type="tel" className={styles.input} placeholder="+998 90 123-45-67" value={regPhone} onChange={(e) => setRegPhone(formatPhone(e.target.value))} required />
+                    </div>
+                  </div>
+
+                  <div className={styles.field}>
+                    <label className={styles.label} htmlFor="reg-password">Password</label>
+                    <div className={styles.inputWrap}>
+                      <span className={styles.inputIcon}>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                          <path d="M7 11V7a5 5 0 0110 0v4"/>
+                        </svg>
+                      </span>
+                      <input id="reg-password" type="password" className={styles.input} placeholder="Min 6 characters" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} required minLength={6} />
                     </div>
                   </div>
                 </div>
 
-                <button type="submit" className={styles.submitBtn}>
-                  Create Account
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
+                <button type="submit" className={styles.submitBtn} disabled={loading}>
+                  {loading ? 'Creating…' : 'Create Account'}
+                  {!loading && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                    </svg>
+                  )}
                 </button>
 
                 <p className={styles.switchHint}>
                   Already have an account?{' '}
-                  <button type="button" className={styles.switchBtn} onClick={() => switchTab('login')}>
-                    Sign In
-                  </button>
+                  <button type="button" className={styles.switchBtn} onClick={() => switchTab('login')}>Sign In</button>
                 </p>
               </form>
             )}
