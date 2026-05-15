@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import styles from './ServicesSection.module.css'
 
 const SERVICES = [
@@ -122,22 +123,27 @@ const ServicesSection = () => {
                   ))}
                 </ul>
 
-                <button className={styles.bookBtn}>
+                <Link
+                  to={`/booking?service=${encodeURIComponent(service.title)}`}
+                  className={styles.bookBtn}
+                  style={{ textDecoration: 'none' }}
+                  onClick={e => e.stopPropagation()}
+                >
                   Book Now
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="5" y1="12" x2="19" y2="12" />
                     <polyline points="12 5 19 12 12 19" />
                   </svg>
-                </button>
+                </Link>
               </div>
             </div>
           ))}
         </div>
 
         <div className={styles.footer}>
-          <button className={styles.allServicesBtn}>
+          <Link to="/services" className={styles.allServicesBtn} style={{ textDecoration: 'none', display: 'inline-block' }}>
             View All Services
-          </button>
+          </Link>
         </div>
 
       </div>

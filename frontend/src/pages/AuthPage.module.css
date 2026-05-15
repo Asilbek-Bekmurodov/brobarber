@@ -309,6 +309,58 @@
   color: rgba(201, 169, 110, 0.6);
 }
 
+/* ── Role Selector ── */
+
+.roleSelector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.roleCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 12px;
+  background: transparent;
+  border: 1px solid rgba(245, 245, 245, 0.1);
+  border-radius: 2px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.35);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.roleCard svg {
+  transition: color 0.3s ease;
+  color: rgba(245, 245, 245, 0.2);
+}
+
+.roleCard:hover {
+  border-color: rgba(201, 169, 110, 0.35);
+  color: rgba(245, 245, 245, 0.6);
+}
+
+.roleCard:hover svg {
+  color: rgba(201, 169, 110, 0.5);
+}
+
+.roleCardActive {
+  border-color: rgba(201, 169, 110, 0.6);
+  background: rgba(201, 169, 110, 0.05);
+  color: #c9a96e;
+}
+
+.roleCardActive svg {
+  color: #c9a96e;
+}
+
 /* ── Submit ── */
 
 .submitBtn {

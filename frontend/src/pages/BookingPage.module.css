@@ -1,0 +1,698 @@
+/* ── Page shell ── */
+.page {
+  min-height: 100vh;
+  background: #141414;
+  color: #f5f5f5;
+  padding-bottom: 120px;
+}
+
+/* ── Header ── */
+.header {
+  position: relative;
+  padding: 40px 24px 32px;
+  border-bottom: 1px solid #222;
+  background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+}
+
+.backBtn {
+  position: absolute;
+  top: 40px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #888;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color 0.2s;
+}
+
+.backBtn:hover { color: #c9a84c; }
+
+.headerCenter {
+  text-align: center;
+  padding-top: 8px;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #c9a84c;
+  margin-bottom: 12px;
+}
+
+.seps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.sepLine {
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c9a84c66, transparent);
+}
+
+.diamond {
+  display: block;
+  width: 5px;
+  height: 5px;
+  background: #c9a84c;
+  transform: rotate(45deg);
+  opacity: 0.7;
+}
+
+.title {
+  font-size: clamp(26px, 5vw, 38px);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: #f5f5f5;
+  margin: 0;
+}
+
+/* ── Content ── */
+.content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Step ── */
+.step {
+  padding: 48px 0 0;
+  transition: opacity 0.3s;
+}
+
+.stepLocked {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.stepLabel {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.stepNumber {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #c9a84c;
+  font-feature-settings: 'tnum';
+}
+
+.stepTitle {
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: #f5f5f5;
+}
+
+/* ── Service chips ── */
+.serviceScroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.serviceScroll::-webkit-scrollbar { display: none; }
+
+.serviceChip {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  position: relative;
+  min-width: 160px;
+}
+
+.serviceChip:hover {
+  border-color: #c9a84c55;
+  background: #232323;
+  transform: translateY(-1px);
+}
+
+.serviceChipActive {
+  border-color: #c9a84c;
+  background: #1e1a10;
+}
+
+.serviceChipActive .chipTitle { color: #c9a84c; }
+
+.chipIcon {
+  color: #888;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+
+.serviceChipActive .chipIcon { color: #c9a84c; }
+
+.chipInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+}
+
+.chipTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: #e0e0e0;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.chipPrice {
+  font-size: 11px;
+  color: #666;
+}
+
+.chipCheck {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #c9a84c;
+  color: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Barber grid ── */
+.barberGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 700px) {
+  .barberGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 400px) {
+  .barberGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+.barberCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 12px;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  text-align: center;
+}
+
+.barberCard:hover:not(:disabled) {
+  border-color: #c9a84c55;
+  background: #232323;
+  transform: translateY(-2px);
+}
+
+.barberCardActive {
+  border-color: #c9a84c;
+  background: #1e1a10;
+}
+
+.barberCardDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.barberAvatarWrap {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.barberAvatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #2a2a2a;
+  transition: border-color 0.2s;
+}
+
+.barberCardActive .barberAvatar {
+  border-color: #c9a84c;
+}
+
+.barberCheck {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #c9a84c;
+  color: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #1e1a10;
+}
+
+.barberName {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f0f0f0;
+}
+
+.barberRole {
+  font-size: 11px;
+  color: #c9a84c;
+  letter-spacing: 0.05em;
+}
+
+.barberSpec {
+  font-size: 10px;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* ── Week nav ── */
+.weekNav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.weekArrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  color: #888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+
+.weekArrow:hover:not(:disabled) {
+  border-color: #c9a84c;
+  color: #c9a84c;
+}
+
+.weekArrow:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.weekLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #ccc;
+  letter-spacing: 0.03em;
+}
+
+/* ── Schedule grid ── */
+.gridWrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 12px;
+  border: 1px solid #222;
+  background: #181818;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 56px repeat(7, minmax(52px, 1fr));
+  min-width: 480px;
+}
+
+.gridCorner {
+  background: #1a1a1a;
+  border-bottom: 1px solid #222;
+  border-right: 1px solid #222;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+
+.dayHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 4px;
+  border-bottom: 1px solid #222;
+  border-right: 1px solid #1e1e1e;
+  background: #1a1a1a;
+  gap: 2px;
+}
+
+.dayHeaderToday {
+  background: #1e1a10;
+  border-bottom-color: #c9a84c44;
+}
+
+.dayName {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.dayHeaderToday .dayName { color: #c9a84c; }
+
+.dayNum {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ccc;
+}
+
+.dayHeaderToday .dayNum { color: #c9a84c; }
+
+.timeLabel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 10px 0 0;
+  height: 36px;
+  font-size: 10px;
+  font-weight: 500;
+  color: #444;
+  letter-spacing: 0.04em;
+  border-right: 1px solid #222;
+  border-bottom: 1px solid #1e1e1e;
+  background: #1a1a1a;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.slot {
+  height: 36px;
+  border-right: 1px solid #1e1e1e;
+  border-bottom: 1px solid #1e1e1e;
+  background: #181818;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  position: relative;
+}
+
+.slotAvailable:hover {
+  background: #222;
+  border-color: #c9a84c44;
+}
+
+.slotToday {
+  background: #1a1a14;
+}
+
+.slotSelected {
+  background: #2a2010 !important;
+  border-color: #c9a84c !important;
+  color: #c9a84c;
+}
+
+.slotBooked {
+  background: #181818;
+  cursor: not-allowed;
+  color: #333;
+}
+
+.slotBooked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    #1f1f1f 4px,
+    #1f1f1f 5px
+  );
+  opacity: 0.6;
+}
+
+.slotPast {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.slotDisabled {
+  cursor: not-allowed;
+}
+
+/* ── Legend ── */
+.legend {
+  display: flex;
+  gap: 20px;
+  margin-top: 14px;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: #666;
+}
+
+.legendDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legendAvailable { background: #222; border: 1px solid #333; }
+.legendBooked {
+  background: repeating-linear-gradient(
+    45deg, #181818, #181818 3px, #222 3px, #222 4px
+  );
+  border: 1px solid #2a2a2a;
+}
+.legendSelected { background: #2a2010; border: 1px solid #c9a84c; }
+
+/* ── Summary bar ── */
+.summaryBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1a1a1a;
+  border-top: 1px solid #2a2a2a;
+  padding: 16px 24px;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.summaryBarVisible {
+  transform: translateY(0);
+}
+
+.summaryInner {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.summaryDetails {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.summaryItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #ccc;
+}
+
+.summaryIcon { color: #888; display: flex; }
+
+.summarySep {
+  color: #444;
+  font-size: 16px;
+}
+
+.confirmBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: #c9a84c;
+  color: #0a0a0a;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.15s;
+  flex-shrink: 0;
+}
+
+.confirmBtn:hover:not(:disabled) {
+  background: #d9bc6c;
+  transform: translateY(-1px);
+}
+
+.confirmBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@media (max-width: 600px) {
+  .summaryInner { flex-direction: column; align-items: stretch; }
+  .confirmBtn { width: 100%; justify-content: center; }
+}
+
+/* ── Confirmed screen ── */
+.confirmedPage {
+  min-height: 100vh;
+  background: #141414;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.confirmedCard {
+  max-width: 420px;
+  width: 100%;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  padding: 48px 40px;
+  text-align: center;
+}
+
+.confirmedIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #1e2a1a;
+  border: 1px solid #3a6a30;
+  color: #5aaa44;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.confirmedSeps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.confirmedTitle {
+  font-size: 28px;
+  font-weight: 300;
+  color: #f5f5f5;
+  margin-bottom: 8px;
+}
+
+.confirmedSub {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 32px;
+}
+
+.confirmedDetails {
+  background: #141414;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.confirmedRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.confirmedLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.confirmedValue {
+  font-size: 13px;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.confirmedDivider {
+  height: 1px;
+  background: #222;
+}
+
+.confirmedBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 32px;
+  background: #c9a84c;
+  color: #0a0a0a;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.confirmedBtn:hover { background: #d9bc6c; }
