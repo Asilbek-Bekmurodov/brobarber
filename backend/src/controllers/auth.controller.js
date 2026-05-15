@@ -6,11 +6,11 @@ const signToken = (id) =>
 
 exports.register = async (req, res) => {
   try {
-    const { firstName, lastName, phoneNumber, password, role } = req.body;
+    const { firstName, lastName, phoneNumber, password } = req.body;
     const exists = await User.findOne({ phoneNumber });
     if (exists) return res.status(400).json({ message: 'Phone already registered' });
 
-    const user = await User.create({ firstName, lastName, phoneNumber, password, role });
+    const user = await User.create({ firstName, lastName, phoneNumber, password, role: 'user' });
     const token = signToken(user._id);
 
     res.status(201).json({

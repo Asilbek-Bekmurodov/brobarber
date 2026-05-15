@@ -25,6 +25,10 @@ exports.getBarberById = async (req, res) => {
 
 exports.updateBarber = async (req, res) => {
   try {
+    // barber can only update own profile; admin can update any
+    if (req.user.role === 'barber' && req.user._id.toString() !== req.params.id) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
     const { firstName, lastName, phoneNumber, bio } = req.body;
     const barber = await User.findByIdAndUpdate(
       req.params.id,

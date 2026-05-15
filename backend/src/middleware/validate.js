@@ -9,7 +9,6 @@ const schemas = {
     lastName:    Joi.string().min(2).required(),
     phoneNumber: PHONE,
     password:    Joi.string().min(6).required(),
-    role:        Joi.string().valid('admin', 'barber', 'user').default('user'),
   }),
 
   login: Joi.object({

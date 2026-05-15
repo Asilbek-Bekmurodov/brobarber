@@ -8,6 +8,14 @@ exports.createBooking = async (req, res) => {
     const service = await Service.findById(serviceId);
     if (!service) return res.status(404).json({ message: 'Service not found' });
 
+    const conflict = await Booking.findOne({
+      barber,
+      date,
+      time,
+      status: { $in: ['pending', 'confirmed'] },
+    });
+    if (conflict) return res.status(409).json({ message: 'This time slot is already booked' });
+
     const booking = await Booking.create({
       user: req.user._id,
       barber,
