@@ -7,6 +7,7 @@ import ServicesPage from './pages/ServicesPage'
 import BookingPage from './pages/BookingPage'
 import AuthPage from './pages/AuthPage'
 import DashboardPage from './pages/DashboardPage'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -23,10 +24,24 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/barbers/:id" element={<BarberDetailPage />} />
           <Route path="/services" element={<ServicesPage />} />
-          <Route path="/booking" element={<BookingPage />} />
+          <Route
+            path="/booking"
+            element={
+              <ProtectedRoute>
+                <BookingPage />
+              </ProtectedRoute>
+            }
+          />
         </Route>
         <Route path="/auth" element={<AuthPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute role="admin">
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   )
