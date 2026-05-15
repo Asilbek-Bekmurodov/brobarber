@@ -1,4 +1,5 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit'
+import authReducer from './authSlice'
 
 const appSlice = createSlice({
   name: 'app',
@@ -21,5 +22,6 @@ export const { toggleMenu, setActiveSection } = appSlice.actions
 export const store = configureStore({
   reducer: {
     app: appSlice.reducer,
+    auth: authReducer,
   },
 })
