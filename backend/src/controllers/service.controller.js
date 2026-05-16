@@ -34,10 +34,14 @@ exports.createService = async (req, res) => {
 
 exports.updateService = async (req, res) => {
   try {
-    const service = await Service.findByIdAndUpdate(req.params.id, req.body, {
-      new: true, runValidators: true,
-    });
+    const service = await Service.findById(req.params.id);
     if (!service) return res.status(404).json({ message: 'Service not found' });
+    if (req.user.role === 'barber' && String(service.barber) !== String(req.user._id)) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+    const { name, description, price, duration } = req.body;
+    Object.assign(service, { name, description, price, duration });
+    await service.save();
     res.json({ service });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -46,8 +50,12 @@ exports.updateService = async (req, res) => {
 
 exports.deleteService = async (req, res) => {
   try {
-    const service = await Service.findByIdAndDelete(req.params.id);
+    const service = await Service.findById(req.params.id);
     if (!service) return res.status(404).json({ message: 'Service not found' });
+    if (req.user.role === 'barber' && String(service.barber) !== String(req.user._id)) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+    await service.deleteOne();
     await User.findByIdAndUpdate(service.barber, { $pull: { services: service._id } });
     res.json({ message: 'Service deleted' });
   } catch (err) {
