@@ -12,6 +12,7 @@ const userRoutes = require('./routes/user.routes');
 const barberRoutes = require('./routes/barber.routes');
 const serviceRoutes = require('./routes/service.routes');
 const bookingRoutes = require('./routes/booking.routes');
+const scheduleRoutes = require('./routes/schedule.routes');
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/barbers', barberRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/schedule', scheduleRoutes);
 
 app.get('/', (req, res) => res.json({ message: 'Barbershop API running' }));
 
