@@ -1,6 +1,7 @@
 const Booking = require('../models/Booking');
 const Service = require('../models/Service');
 const User = require('../models/User');
+const Schedule = require('../models/Schedule');
 
 exports.createBooking = async (req, res) => {
   try {
@@ -86,6 +87,80 @@ exports.cancelBooking = async (req, res) => {
     booking.status = 'cancelled';
     await booking.save();
     res.json({ message: 'Booking cancelled', booking });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+function generateWeekSlots(schedule, weekStart) {
+  const { workStart, workEnd, lunchStart, lunchEnd, daysOff, slotDuration } = schedule;
+  const result = [];
+
+  for (let day = 0; day < 7; day++) {
+    const date = new Date(weekStart);
+    date.setDate(date.getDate() + day);
+    const dateStr = date.toISOString().split('T')[0];
+    const dayOfWeek = date.getDay();
+
+    if (daysOff.includes(dayOfWeek)) {
+      result.push({ date: dateStr, slots: [] });
+      continue;
+    }
+
+    const toMin = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+    const toStr = (m) => `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+
+    const start = toMin(workStart);
+    const end = toMin(workEnd);
+    const ls = toMin(lunchStart);
+    const le = toMin(lunchEnd);
+
+    const slots = [];
+    let cur = start;
+    while (cur + slotDuration <= end) {
+      if (cur >= ls && cur < le) { cur = le; continue; }
+      slots.push(toStr(cur));
+      cur += slotDuration;
+    }
+    result.push({ date: dateStr, slots });
+  }
+  return result;
+}
+
+exports.getAvailableSlots = async (req, res) => {
+  try {
+    const { barberId, weekStart } = req.query;
+    if (!barberId || !weekStart) {
+      return res.status(400).json({ message: 'barberId and weekStart required' });
+    }
+
+    const schedule = await Schedule.findOne({ barber: barberId });
+    if (!schedule) return res.json({ slots: [] });
+
+    const startDate = new Date(weekStart);
+    const allSlots = generateWeekSlots(schedule, startDate);
+
+    const endDate = new Date(startDate);
+    endDate.setDate(endDate.getDate() + 7);
+    const endStr = endDate.toISOString().split('T')[0];
+
+    const bookings = await Booking.find({
+      barber: barberId,
+      date: { $gte: weekStart, $lt: endStr },
+      status: { $in: ['pending', 'confirmed'] },
+    });
+
+    const bookedSet = new Set(bookings.map((b) => `${b.date}|${b.time}`));
+
+    const result = allSlots.map((day) => ({
+      date: day.date,
+      slots: day.slots.map((time) => ({
+        time,
+        available: !bookedSet.has(`${day.date}|${time}`),
+      })),
+    }));
+
+    res.json({ slots: result });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

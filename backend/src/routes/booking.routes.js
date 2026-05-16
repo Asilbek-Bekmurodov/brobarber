@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const {
-  createBooking, getMyBookings, getAllBookings, updateBookingStatus, cancelBooking,
+  createBooking, getMyBookings, getAllBookings, updateBookingStatus, cancelBooking, getAvailableSlots,
 } = require('../controllers/booking.controller');
 const { protect, authorize } = require('../middleware/auth');
 const validate = require('../middleware/validate');
@@ -84,6 +84,8 @@ router.get('/', protect, authorize('admin', 'barber'), getAllBookings);
  *       200:
  *         description: Status updated
  */
+router.get('/slots', getAvailableSlots);
+
 router.patch('/:id/status', protect, authorize('admin', 'barber'), updateBookingStatus);
 
 /**
