@@ -7,6 +7,7 @@ import ServicesPage from './pages/ServicesPage'
 import BookingPage from './pages/BookingPage'
 import AuthPage from './pages/AuthPage'
 import DashboardPage from './pages/DashboardPage'
+import BarberDashboard from './pages/BarberDashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function ScrollToTop() {
@@ -39,6 +40,14 @@ function App() {
           element={
             <ProtectedRoute role="admin">
               <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/barber"
+          element={
+            <ProtectedRoute role="barber">
+              <BarberDashboard />
             </ProtectedRoute>
           }
         />
