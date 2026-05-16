@@ -20,6 +20,7 @@ const AuthPage = () => {
   const [regLastName, setRegLastName] = useState('')
   const [regPhone, setRegPhone] = useState('+998')
   const [regPassword, setRegPassword] = useState('')
+  const [isBarber, setIsBarber] = useState(false)
 
   useEffect(() => {
     if (user) navigate('/')
@@ -63,7 +64,12 @@ const AuthPage = () => {
       phoneNumber: toApiPhone(loginPhone),
       password: loginPassword,
     }))
-    if (!result.error) navigate('/')
+    if (!result.error) {
+      const redirectTo = searchParams.get('redirect')
+      if (redirectTo) return navigate(redirectTo)
+      const role = result.payload?.user?.role
+      navigate(role === 'barber' ? '/barber' : role === 'admin' ? '/dashboard' : '/')
+    }
   }
 
   const handleRegisterSubmit = async (e) => {
@@ -73,8 +79,13 @@ const AuthPage = () => {
       lastName: regLastName,
       phoneNumber: toApiPhone(regPhone),
       password: regPassword,
+      role: isBarber ? 'barber' : 'user',
     }))
-    if (!result.error) navigate('/')
+    if (!result.error) {
+      const redirectTo = searchParams.get('redirect')
+      if (redirectTo) return navigate(redirectTo)
+      navigate(isBarber ? '/barber' : '/')
+    }
   }
 
   return (
@@ -244,6 +255,18 @@ const AuthPage = () => {
                       <input id="reg-password" type="password" className={styles.input} placeholder="Min 6 characters" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} required minLength={6} />
                     </div>
                   </div>
+                </div>
+
+                <div className={styles.field}>
+                  <label className={styles.label} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={isBarber}
+                      onChange={(e) => setIsBarber(e.target.checked)}
+                      style={{ width: '16px', height: '16px', accentColor: '#c9a96e', cursor: 'pointer' }}
+                    />
+                    <span>Men barber sifatida ro'yxatdan o'taman</span>
+                  </label>
                 </div>
 
                 <button type="submit" className={styles.submitBtn} disabled={loading}>
