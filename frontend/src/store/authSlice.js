@@ -31,6 +31,7 @@ const authSlice = createSlice({
     token: storedToken,
     loading: false,
     error: null,
+    recentBooking: null,
   },
   reducers: {
     logout(state) {
@@ -41,6 +42,9 @@ const authSlice = createSlice({
     },
     clearError(state) {
       state.error = null
+    },
+    setRecentBooking(state, action) {
+      state.recentBooking = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -66,5 +70,5 @@ const authSlice = createSlice({
   },
 })
 
-export const { logout, clearError } = authSlice.actions
+export const { logout, clearError, setRecentBooking } = authSlice.actions
 export default authSlice.reducer
