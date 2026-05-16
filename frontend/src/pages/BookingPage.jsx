@@ -1,13 +1,9 @@
-import { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useSearchParams, useNavigate, Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import api from '../lib/api'
 import styles from './BookingPage.module.css'
-
-const HOURS = Array.from({ length: 15 }, (_, i) => {
-  const h = i + 8
-  return `${String(h).padStart(2, '0')}:00`
-})
+import { setRecentBooking } from '../store/authSlice'
 
 const DAYS_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -23,21 +19,10 @@ function getWeekDates(weekOffset) {
   })
 }
 
-function seedBooked(barberId, weekOffset) {
-  const booked = new Set()
-  const seed = barberId.charCodeAt(0) + weekOffset * 7
-  DAYS_SHORT.forEach((_, di) => {
-    HOURS.forEach((h, hi) => {
-      const hash = ((seed * 31 + di * 17 + hi * 7) * 2654435761) >>> 0
-      if (hash % 3 === 0) booked.add(`${di}-${hi}`)
-    })
-  })
-  return booked
-}
-
 const BookingPage = () => {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const [selectedService, setSelectedService] = useState(null)
   const [selectedBarber, setSelectedBarber] = useState(null)
@@ -51,6 +36,10 @@ const BookingPage = () => {
   const [loadingData, setLoadingData] = useState(true)
   const [submitLoading, setSubmitLoading] = useState(false)
   const [submitError, setSubmitError] = useState(null)
+
+  const [schedule, setSchedule] = useState(null)
+  const [slotsData, setSlotsData] = useState([])
+  const [loadingSlots, setLoadingSlots] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,15 +67,40 @@ const BookingPage = () => {
     fetchData()
   }, [])
 
+  useEffect(() => {
+    if (!selectedBarber) { setSchedule(null); setSlotsData([]); return }
+    api.get(`/schedule/${selectedBarber._id}`).then((res) => {
+      setSchedule(res.data.schedule)
+    }).catch(() => setSchedule(null))
+  }, [selectedBarber])
+
+  useEffect(() => {
+    if (!selectedBarber) return
+    setLoadingSlots(true)
+    setSelectedSlot(null)
+    const weekStart = getWeekDates(weekOffset)[0]
+    const weekStartStr = weekStart.toISOString().split('T')[0]
+    api.get(`/bookings/slots?barberId=${selectedBarber._id}&weekStart=${weekStartStr}`)
+      .then((res) => setSlotsData(res.data.slots || []))
+      .catch(() => setSlotsData([]))
+      .finally(() => setLoadingSlots(false))
+  }, [selectedBarber, weekOffset])
+
   const weekDates = useMemo(() => getWeekDates(weekOffset), [weekOffset])
 
-  const bookedSlots = useMemo(
-    () => (selectedBarber ? seedBooked(selectedBarber._id, weekOffset) : new Set()),
-    [selectedBarber, weekOffset]
-  )
+  const slotMap = useMemo(() => {
+    const m = {}
+    slotsData.forEach(({ date, slots }) => {
+      slots.forEach(({ time, available }) => { m[`${date}|${time}`] = available })
+    })
+    return m
+  }, [slotsData])
 
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  const timeLabels = useMemo(() => {
+    const set = new Set()
+    slotsData.forEach(({ slots }) => slots.forEach(({ time }) => set.add(time)))
+    return [...set].sort()
+  }, [slotsData])
 
   const weekLabel = (() => {
     const fmt = (d) =>
@@ -94,20 +108,37 @@ const BookingPage = () => {
     return `${fmt(weekDates[0])} – ${fmt(weekDates[6])} ${weekDates[0].getFullYear()}`
   })()
 
-  const isPast = (date, hourIdx) => {
-    const slot = new Date(date)
-    slot.setHours(8 + hourIdx, 0, 0, 0)
-    return slot < new Date()
+  const slotLabel = selectedSlot
+    ? `${new Date(selectedSlot.dateStr + 'T00:00:00').toLocaleDateString('uz-UZ', { weekday: 'short', day: 'numeric', month: 'short' })}, ${selectedSlot.time}`
+    : null
+
+  const canConfirm = selectedService && selectedBarber && selectedSlot && !submitLoading
+
+  const handleConfirm = async () => {
+    if (!canConfirm) return
+    setSubmitLoading(true)
+    setSubmitError(null)
+    try {
+      await api.post('/bookings', {
+        barber: selectedBarber._id,
+        service: selectedService._id,
+        date: selectedSlot.dateStr,
+        time: selectedSlot.time,
+        notes: '',
+      })
+      dispatch(setRecentBooking({
+        barberName: `${selectedBarber.firstName} ${selectedBarber.lastName}`,
+        date: selectedSlot.dateStr,
+        time: selectedSlot.time,
+        service: selectedService.name,
+      }))
+      setConfirmed(true)
+    } catch (err) {
+      setSubmitError(err.response?.data?.message || 'Xatolik yuz berdi')
+    } finally {
+      setSubmitLoading(false)
+    }
   }
-
-  const slotLabel = (() => {
-    if (!selectedSlot) return null
-    const { di, hi } = selectedSlot
-    const d = weekDates[di]
-    return `${d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}, ${HOURS[hi]}`
-  })()
-
-  const canConfirm = selectedService && selectedBarber && selectedSlot
 
   if (loadingData) {
     return (
@@ -294,46 +325,58 @@ const BookingPage = () => {
               })}
 
               {/* Time rows */}
-              {HOURS.map((hour, hi) => (
-                <>
-                  <div key={`h-${hi}`} className={styles.timeLabel}>{hour}</div>
+              {timeLabels.length === 0 && !loadingSlots && selectedBarber && (
+                <div style={{ color: '#555', padding: '24px', gridColumn: '1/-1' }}>
+                  {schedule ? 'Bu hafta ish vaqti yo\'q' : 'Jadval hali sozlanmagan'}
+                </div>
+              )}
+              {loadingSlots && (
+                <div style={{ color: '#555', padding: '24px', gridColumn: '1/-1' }}>Yuklanmoqda…</div>
+              )}
+              {timeLabels.map((time, hi) => (
+                <React.Fragment key={`row-${hi}`}>
+                  <div className={styles.timeLabel}>{time}</div>
                   {weekDates.map((date, di) => {
-                    const key = `${di}-${hi}`
-                    const isBooked = bookedSlots.has(key) && selectedBarber
-                    const past = isPast(date, hi)
-                    const isSelected = selectedSlot?.di === di && selectedSlot?.hi === hi
+                    const dateStr = date.toISOString().split('T')[0]
+                    const key = `${dateStr}|${time}`
+                    const available = slotMap[key]
+                    const inMap = key in slotMap
+                    const now = new Date()
+                    const slotDate = new Date(dateStr + 'T' + time + ':00')
+                    const past = slotDate < now
+                    const isSelected = selectedSlot?.dateStr === dateStr && selectedSlot?.time === time
                     const isToday = date.toDateString() === new Date().toDateString()
-                    const disabled = isBooked || past || !selectedBarber
+                    const disabled = !inMap || !available || past || !selectedBarber
 
                     return (
                       <button
                         key={key}
                         className={[
                           styles.slot,
-                          isBooked ? styles.slotBooked : '',
-                          past ? styles.slotPast : '',
+                          !inMap ? styles.slotDisabled : '',
+                          inMap && !available ? styles.slotBooked : '',
+                          past && inMap ? styles.slotPast : '',
                           isSelected ? styles.slotSelected : '',
                           isToday ? styles.slotToday : '',
-                          disabled ? styles.slotDisabled : styles.slotAvailable,
-                        ].join(' ')}
-                        onClick={() => !disabled && setSelectedSlot({ di, hi })}
+                          inMap && available && !past ? styles.slotAvailable : '',
+                        ].filter(Boolean).join(' ')}
+                        onClick={() => !disabled && setSelectedSlot({ dateStr, time })}
                         disabled={disabled}
-                        title={isBooked ? 'Already booked' : past ? 'Past time' : `${DAYS_SHORT[di]} ${hour}`}
                       >
-                        {isBooked && (
+                        {inMap && !available && (
                           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                           </svg>
                         )}
-                        {isSelected && !isBooked && (
+                        {isSelected && available && (
                           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <polyline points="20 6 9 17 4 12" />
+                            <polyline points="20 6 9 17 4 12"/>
                           </svg>
                         )}
                       </button>
                     )
                   })}
-                </>
+                </React.Fragment>
               ))}
             </div>
           </div>
@@ -383,27 +426,7 @@ const BookingPage = () => {
           )}
           <button
             className={styles.confirmBtn}
-            onClick={async () => {
-              if (!canConfirm || submitLoading) return
-              setSubmitLoading(true)
-              setSubmitError(null)
-              try {
-                const { di, hi } = selectedSlot
-                const date = weekDates[di].toISOString().slice(0, 10)
-                const time = HOURS[hi]
-                await api.post('/bookings', {
-                  barber: selectedBarber._id,
-                  service: selectedService._id,
-                  date,
-                  time,
-                })
-                setConfirmed(true)
-              } catch (err) {
-                setSubmitError(err.response?.data?.message || 'Booking failed')
-              } finally {
-                setSubmitLoading(false)
-              }
-            }}
+            onClick={handleConfirm}
             disabled={!canConfirm}
           >
             {submitLoading ? 'Confirming…' : 'Confirm Booking'}
