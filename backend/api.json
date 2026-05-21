@@ -1,0 +1,572 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Barbershop API",
+    "version": "1.0.0",
+    "description": "Barbershop booking system — Auth, Barbers, Services, Bookings, Schedule"
+  },
+  "servers": [
+    { "url": "http://localhost:5000", "description": "Local dev" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id":         { "type": "string", "example": "64abc123def456" },
+          "firstName":   { "type": "string", "example": "Ali" },
+          "lastName":    { "type": "string", "example": "Karimov" },
+          "phoneNumber": { "type": "string", "example": "+998901234567" },
+          "role":        { "type": "string", "enum": ["admin", "barber", "user"] },
+          "bio":         { "type": "string" },
+          "services":    { "type": "array", "items": { "type": "string" } },
+          "createdAt":   { "type": "string", "format": "date-time" }
+        }
+      },
+      "Service": {
+        "type": "object",
+        "properties": {
+          "_id":         { "type": "string" },
+          "name":        { "type": "string", "example": "Soch olish" },
+          "description": { "type": "string" },
+          "price":       { "type": "number", "example": 30000 },
+          "duration":    { "type": "number", "example": 30, "description": "minutes" },
+          "barber":      { "type": "string", "description": "Barber user ID" }
+        }
+      },
+      "Booking": {
+        "type": "object",
+        "properties": {
+          "_id":     { "type": "string" },
+          "user":    { "type": "string" },
+          "barber":  { "type": "string" },
+          "service": { "type": "string" },
+          "date":    { "type": "string", "example": "2026-05-20" },
+          "time":    { "type": "string", "example": "10:00" },
+          "status":  { "type": "string", "enum": ["pending", "confirmed", "cancelled", "completed"] },
+          "price":   { "type": "number" },
+          "notes":   { "type": "string" }
+        }
+      },
+      "Schedule": {
+        "type": "object",
+        "properties": {
+          "barber":       { "type": "string" },
+          "workStart":    { "type": "string", "example": "09:00" },
+          "workEnd":      { "type": "string", "example": "18:00" },
+          "lunchStart":   { "type": "string", "example": "13:00" },
+          "lunchEnd":     { "type": "string", "example": "14:00" },
+          "daysOff":      { "type": "array", "items": { "type": "number" }, "example": [0, 6], "description": "0=Sun, 6=Sat" },
+          "slotDuration": { "type": "number", "example": 30, "description": "minutes" }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" }
+        }
+      }
+    }
+  },
+  "security": [{ "bearerAuth": [] }],
+  "tags": [
+    { "name": "Auth",     "description": "Registration, login, current user" },
+    { "name": "Barbers",  "description": "Barber profiles" },
+    { "name": "Services", "description": "Barber services" },
+    { "name": "Bookings", "description": "Booking management" },
+    { "name": "Schedule", "description": "Barber work schedule & slots" },
+    { "name": "Users",    "description": "User management (admin only)" }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a new user",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["firstName", "lastName", "phoneNumber", "password"],
+                "properties": {
+                  "firstName":   { "type": "string", "example": "Ali", "minLength": 2 },
+                  "lastName":    { "type": "string", "example": "Karimov", "minLength": 2 },
+                  "phoneNumber": { "type": "string", "example": "+998901234567", "pattern": "^\\+998[0-9]{9}$" },
+                  "password":    { "type": "string", "example": "secret123", "minLength": 6 },
+                  "role":        { "type": "string", "enum": ["user", "barber"], "example": "user" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registered successfully — returns token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" },
+                    "user":  { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Validation error or phone already taken", "$ref": "#/components/schemas/Error" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["phoneNumber", "password"],
+                "properties": {
+                  "phoneNumber": { "type": "string", "example": "+998901234567" },
+                  "password":    { "type": "string", "example": "secret123" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful — returns JWT token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" },
+                    "user":  { "$ref": "#/components/schemas/User" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/api/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current authenticated user",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Current user data",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          },
+          "401": { "description": "Unauthorized — no or invalid token" }
+        }
+      }
+    },
+    "/api/barbers": {
+      "get": {
+        "tags": ["Barbers"],
+        "summary": "Get all barbers (public)",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "List of barbers with services",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/User" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/barbers/{id}": {
+      "get": {
+        "tags": ["Barbers"],
+        "summary": "Get barber by ID (public)",
+        "security": [],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" }, "example": "64abc123" }
+        ],
+        "responses": {
+          "200": { "description": "Barber object", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } },
+          "404": { "description": "Not found" }
+        }
+      },
+      "put": {
+        "tags": ["Barbers"],
+        "summary": "Update barber profile (admin or own barber)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "firstName": { "type": "string" },
+                  "lastName":  { "type": "string" },
+                  "bio":       { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Updated barber" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/api/services": {
+      "get": {
+        "tags": ["Services"],
+        "summary": "Get all services (public)",
+        "security": [],
+        "parameters": [
+          { "in": "query", "name": "barberId", "required": false, "schema": { "type": "string" }, "description": "Filter by barber ID" }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of services",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Service" } }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Services"],
+        "summary": "Create service (barber or admin)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "price", "duration"],
+                "properties": {
+                  "name":        { "type": "string", "example": "Soch olish" },
+                  "description": { "type": "string" },
+                  "price":       { "type": "number", "example": 30000 },
+                  "duration":    { "type": "number", "example": 30 },
+                  "barberId":    { "type": "string", "description": "Required if admin creating for a barber" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Service created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Service" } } } },
+          "400": { "description": "Validation error" },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/api/services/{id}": {
+      "get": {
+        "tags": ["Services"],
+        "summary": "Get service by ID (public)",
+        "security": [],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Service object", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Service" } } } },
+          "404": { "description": "Not found" }
+        }
+      },
+      "put": {
+        "tags": ["Services"],
+        "summary": "Update service (barber/admin)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name":        { "type": "string" },
+                  "description": { "type": "string" },
+                  "price":       { "type": "number" },
+                  "duration":    { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Service updated" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not found" }
+        }
+      },
+      "delete": {
+        "tags": ["Services"],
+        "summary": "Delete service (barber/admin)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Service deleted" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not found" }
+        }
+      }
+    },
+    "/api/bookings": {
+      "post": {
+        "tags": ["Bookings"],
+        "summary": "Create booking (user only)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["barber", "service", "date", "time"],
+                "properties": {
+                  "barber":  { "type": "string", "example": "64abc123def456", "description": "Barber user ID (24-char hex)" },
+                  "service": { "type": "string", "example": "64abc123def789", "description": "Service ID (24-char hex)" },
+                  "date":    { "type": "string", "example": "2026-05-20", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+                  "time":    { "type": "string", "example": "10:00", "pattern": "^\\d{2}:\\d{2}$" },
+                  "notes":   { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Booking created", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Booking" } } } },
+          "400": { "description": "Validation error or slot not available" },
+          "403": { "description": "Forbidden — only users can book" }
+        }
+      },
+      "get": {
+        "tags": ["Bookings"],
+        "summary": "Get all bookings (admin sees all, barber sees own)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "List of bookings",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Booking" } }
+              }
+            }
+          },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/api/bookings/my": {
+      "get": {
+        "tags": ["Bookings"],
+        "summary": "Get my bookings (user only)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "User's own bookings",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Booking" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/bookings/slots": {
+      "get": {
+        "tags": ["Bookings"],
+        "summary": "Get available time slots for a barber on a date",
+        "security": [],
+        "parameters": [
+          { "in": "query", "name": "barberId", "required": true, "schema": { "type": "string" }, "example": "64abc123" },
+          { "in": "query", "name": "date",     "required": true, "schema": { "type": "string" }, "example": "2026-05-20" },
+          { "in": "query", "name": "serviceId","required": false, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of available slots",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "type": "string", "example": "10:00" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/bookings/{id}/status": {
+      "patch": {
+        "tags": ["Bookings"],
+        "summary": "Update booking status (admin/barber)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["status"],
+                "properties": {
+                  "status": { "type": "string", "enum": ["pending", "confirmed", "cancelled", "completed"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Status updated" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Booking not found" }
+        }
+      }
+    },
+    "/api/bookings/{id}/cancel": {
+      "patch": {
+        "tags": ["Bookings"],
+        "summary": "Cancel own booking (user only)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Booking cancelled" },
+          "403": { "description": "Forbidden — not your booking" },
+          "404": { "description": "Booking not found" }
+        }
+      }
+    },
+    "/api/schedule/{barberId}": {
+      "get": {
+        "tags": ["Schedule"],
+        "summary": "Get barber's work schedule (public)",
+        "security": [],
+        "parameters": [
+          { "in": "path", "name": "barberId", "required": true, "schema": { "type": "string" }, "example": "64abc123" }
+        ],
+        "responses": {
+          "200": { "description": "Schedule object", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Schedule" } } } },
+          "404": { "description": "No schedule found" }
+        }
+      }
+    },
+    "/api/schedule": {
+      "put": {
+        "tags": ["Schedule"],
+        "summary": "Create or update own schedule (barber/admin)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "workStart":    { "type": "string", "example": "09:00" },
+                  "workEnd":      { "type": "string", "example": "18:00" },
+                  "lunchStart":   { "type": "string", "example": "13:00" },
+                  "lunchEnd":     { "type": "string", "example": "14:00" },
+                  "daysOff":      { "type": "array", "items": { "type": "number" }, "example": [0, 6] },
+                  "slotDuration": { "type": "number", "example": 30 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Schedule saved", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Schedule" } } } },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get all users (admin only)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "List of users",
+            "content": {
+              "application/json": {
+                "schema": { "type": "array", "items": { "$ref": "#/components/schemas/User" } }
+              }
+            }
+          },
+          "403": { "description": "Forbidden" }
+        }
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get user by ID (admin only)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "User object", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not found" }
+        }
+      },
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Delete user (admin only)",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "User deleted" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not found" }
+        }
+      }
+    }
+  }
+}
