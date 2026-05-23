@@ -16,6 +16,8 @@ const scheduleRoutes = require('./routes/schedule.routes');
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 connectDB();
 
 app.use(cors({
