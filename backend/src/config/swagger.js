@@ -8,7 +8,10 @@ const options = {
       version: '1.0.0',
       description: 'Barbershop booking system API',
     },
-    servers: [{ url: 'http://localhost:5000' }],
+    servers: [
+      { url: 'https://brobarber-392z.onrender.com', description: 'Production' },
+      { url: 'http://localhost:5002', description: 'Local' },
+    ],
     components: {
       securitySchemes: {
         bearerAuth: {
