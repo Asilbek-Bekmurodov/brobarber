@@ -150,12 +150,14 @@
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    160deg,
-    rgba(8, 6, 2, 0.88) 0%,
-    rgba(18, 13, 4, 0.72) 55%,
-    rgba(10, 8, 3, 0.82) 100%
-  );
+  background:
+    linear-gradient(var(--img-flayer), var(--img-flayer)),
+    linear-gradient(
+      160deg,
+      rgba(8, 6, 2, 0.88) 0%,
+      rgba(18, 13, 4, 0.72) 55%,
+      rgba(10, 8, 3, 0.82) 100%
+    );
 }
 
 .heroContent {

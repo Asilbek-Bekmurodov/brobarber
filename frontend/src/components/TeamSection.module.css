@@ -159,21 +159,25 @@
 .cardImageOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(10, 10, 10, 0.6) 0%,
-    rgba(10, 10, 10, 0.1) 50%,
-    transparent 100%
-  );
+  background:
+    linear-gradient(var(--img-flayer), var(--img-flayer)),
+    linear-gradient(
+      to top,
+      rgba(10, 10, 10, 0.6) 0%,
+      rgba(10, 10, 10, 0.1) 50%,
+      transparent 100%
+    );
   transition: background 0.4s ease;
 }
 
 .card:hover .cardImageOverlay {
-  background: linear-gradient(
-    to top,
-    rgba(10, 10, 10, 0.45) 0%,
-    transparent 60%
-  );
+  background:
+    linear-gradient(var(--img-flayer), var(--img-flayer)),
+    linear-gradient(
+      to top,
+      rgba(10, 10, 10, 0.45) 0%,
+      transparent 60%
+    );
 }
 
 .cardIndex {

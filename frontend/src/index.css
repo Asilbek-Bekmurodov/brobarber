@@ -1,6 +1,7 @@
 /* ── Theme Variables ── */
 :root,
 [data-theme="dark"] {
+  --img-flayer: rgba(0, 0, 0, 0);
   --rgb-bg:     26 26 26;
   --rgb-bg2:    17 17 17;
   --rgb-bg3:    13 13 13;
@@ -21,6 +22,7 @@
 }
 
 [data-theme="light"] {
+  --img-flayer: rgba(245, 240, 232, 0.20);
   --rgb-bg:     245 240 232;
   --rgb-bg2:    235 229 218;
   --rgb-bg3:    224 217 204;
