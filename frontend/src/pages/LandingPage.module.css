@@ -1,10 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
 .page {
-  background: #1a1a1a;
-  color: #f5f5f5;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-family: 'DM Sans', -apple-system, sans-serif;
   overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* ── Header ── */
@@ -22,10 +23,10 @@
 }
 
 .headerSolid {
-  background: rgba(18, 18, 18, 0.96);
+  background: rgb(var(--rgb-bg) / 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-color: rgba(201, 169, 110, 0.12);
+  border-color: rgb(var(--rgb-accent) / 0.12);
 }
 
 .headerInner {
@@ -39,7 +40,7 @@
   font-family: 'Cormorant Garamond', serif;
   font-size: 28px;
   font-weight: 600;
-  color: #c9a96e;
+  color: var(--accent);
   letter-spacing: 0.02em;
   cursor: default;
 }
@@ -54,14 +55,12 @@
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.55);
+  color: rgb(var(--rgb-text) / 0.55);
   text-decoration: none;
   transition: color 0.25s;
 }
 
-.navLink:hover {
-  color: #f5f5f5;
-}
+.navLink:hover { color: var(--text-primary); }
 
 .authBtns {
   display: flex;
@@ -69,21 +68,41 @@
   gap: 10px;
 }
 
+.themeToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgb(var(--rgb-text) / 0.2);
+  color: rgb(var(--rgb-text) / 0.6);
+  background: none;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.themeToggle:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgb(var(--rgb-accent) / 0.08);
+}
+
 .signInBtn {
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.08em;
-  color: rgba(245, 245, 245, 0.65);
+  color: rgb(var(--rgb-text) / 0.65);
   text-decoration: none;
   padding: 9px 22px;
-  border: 1px solid rgba(245, 245, 245, 0.18);
+  border: 1px solid rgb(var(--rgb-text) / 0.18);
   border-radius: 2px;
   transition: color 0.2s, border-color 0.2s;
 }
 
 .signInBtn:hover {
-  color: #f5f5f5;
-  border-color: rgba(245, 245, 245, 0.45);
+  color: var(--text-primary);
+  border-color: rgb(var(--rgb-text) / 0.45);
 }
 
 .registerBtn {
@@ -91,16 +110,16 @@
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #1a1a1a;
+  color: rgb(var(--rgb-bg));
   text-decoration: none;
   padding: 9px 22px;
-  background: #c9a96e;
+  background: var(--accent);
   border-radius: 2px;
-  transition: background 0.2s, transform 0.15s;
+  transition: opacity 0.2s, transform 0.15s;
 }
 
 .registerBtn:hover {
-  background: #d4b67a;
+  opacity: 0.88;
   transform: translateY(-1px);
 }
 
@@ -209,11 +228,11 @@
   background: #c9a96e;
   padding: 16px 40px;
   border-radius: 2px;
-  transition: background 0.2s, transform 0.2s;
+  transition: opacity 0.2s, transform 0.2s;
 }
 
 .ctaPrimary:hover {
-  background: #d4b67a;
+  opacity: 0.88;
   transform: translateY(-2px);
 }
 
@@ -272,9 +291,10 @@
 /* ── Stats ── */
 
 .stats {
-  background: #131313;
-  border-top: 1px solid rgba(201, 169, 110, 0.12);
-  border-bottom: 1px solid rgba(201, 169, 110, 0.12);
+  background: var(--bg-secondary);
+  border-top: 1px solid rgb(var(--rgb-accent) / 0.12);
+  border-bottom: 1px solid rgb(var(--rgb-accent) / 0.12);
+  transition: background 0.3s ease;
 }
 
 .statsInner {
@@ -298,7 +318,7 @@
   font-family: 'Cormorant Garamond', serif;
   font-size: 52px;
   font-weight: 600;
-  color: #c9a96e;
+  color: var(--accent);
   line-height: 1;
 }
 
@@ -307,13 +327,15 @@
   font-weight: 400;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.38);
+  color: rgb(var(--rgb-text) / 0.38);
 }
 
 /* ── Services ── */
 
 .services {
   padding: 120px 48px;
+  background: var(--bg-primary);
+  transition: background 0.3s ease;
 }
 
 .servicesInner {
@@ -335,14 +357,14 @@
   font-weight: 400;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
 }
 
 .sectionTitle {
   font-family: 'Cormorant Garamond', serif;
   font-size: 52px;
   font-weight: 500;
-  color: #f5f5f5;
+  color: var(--text-primary);
   line-height: 1.08;
 }
 
@@ -353,14 +375,14 @@
 }
 
 .serviceCard {
-  background: #1e1e1e;
+  background: var(--bg-card);
   padding: 52px 40px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   position: relative;
   overflow: hidden;
-  transition: background 0.25s;
+  transition: background 0.25s ease;
   cursor: default;
 }
 
@@ -369,57 +391,46 @@
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 2px;
-  background: #c9a96e;
+  background: var(--accent);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.35s ease;
 }
 
-.serviceCard:hover {
-  background: #222;
-}
+.serviceCard:hover { background: var(--bg-card-hover); }
+.serviceCard:hover::before { transform: scaleX(1); }
 
-.serviceCard:hover::before {
-  transform: scaleX(1);
-}
-
-.serviceIcon {
-  font-size: 26px;
-  line-height: 1;
-}
+.serviceIcon { font-size: 26px; line-height: 1; }
 
 .serviceTitle {
   font-family: 'Cormorant Garamond', serif;
   font-size: 26px;
   font-weight: 500;
-  color: #f5f5f5;
+  color: var(--text-primary);
 }
 
 .serviceDesc {
   font-size: 13px;
   font-weight: 300;
   line-height: 1.75;
-  color: rgba(245, 245, 245, 0.45);
+  color: rgb(var(--rgb-text) / 0.45);
   flex: 1;
 }
 
 .serviceArrow {
   font-size: 18px;
-  color: #c9a96e;
+  color: var(--accent);
   opacity: 0;
   transition: opacity 0.25s, transform 0.25s;
   transform: translateX(-6px);
 }
 
-.serviceCard:hover .serviceArrow {
-  opacity: 1;
-  transform: translateX(0);
-}
+.serviceCard:hover .serviceArrow { opacity: 1; transform: translateX(0); }
 
 /* ── CTA Banner ── */
 
 .ctaBanner {
-  background: #c9a96e;
+  background: var(--accent);
   padding: 88px 60px;
 }
 
@@ -456,39 +467,37 @@
   letter-spacing: 0.14em;
   text-transform: uppercase;
   text-decoration: none;
-  color: #c9a96e;
+  color: var(--accent);
   background: #1a1a1a;
   padding: 18px 44px;
   border-radius: 2px;
-  transition: background 0.2s, transform 0.15s;
+  transition: opacity 0.2s, transform 0.15s;
 }
 
-.ctaBannerBtn:hover {
-  background: #242424;
-  transform: translateY(-2px);
-}
+.ctaBannerBtn:hover { opacity: 0.85; transform: translateY(-2px); }
 
 /* ── Footer ── */
 
 .footer {
-  background: #0f0f0f;
+  background: var(--bg-deep);
   padding: 44px 60px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid rgba(201, 169, 110, 0.08);
+  border-top: 1px solid rgb(var(--rgb-accent) / 0.08);
+  transition: background 0.3s ease;
 }
 
 .footerLogo {
   font-family: 'Cormorant Garamond', serif;
   font-size: 24px;
   font-weight: 600;
-  color: #c9a96e;
+  color: var(--accent);
 }
 
 .footerCopy {
   font-size: 12px;
-  color: rgba(245, 245, 245, 0.25);
+  color: rgb(var(--rgb-text) / 0.25);
   letter-spacing: 0.04em;
 }
 

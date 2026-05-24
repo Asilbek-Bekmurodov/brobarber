@@ -1,5 +1,5 @@
 .page {
-  background-color: #1a1a1a;
+  background-color: var(--bg-primary);
   min-height: 100vh;
 }
 
@@ -65,7 +65,7 @@
 }
 
 .backBtn:hover {
-  color: #f5f5f5;
+  color: var(--text-primary);
 }
 
 .backBtn svg {
@@ -92,7 +92,7 @@
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
   margin-bottom: 20px;
 }
 
@@ -101,7 +101,7 @@
   font-size: 80px;
   font-weight: 400;
   line-height: 1.0;
-  color: #f5f5f5;
+  color: var(--text-primary);
   letter-spacing: -0.02em;
   margin-bottom: 20px;
 }
@@ -200,7 +200,7 @@
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
   margin-bottom: 16px;
 }
 
@@ -239,7 +239,7 @@
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
   margin-bottom: 16px;
 }
 
@@ -254,11 +254,11 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 2px;
-  background-color: rgba(245, 245, 245, 0.05);
+  background-color: rgb(var(--rgb-text) / 0.05);
 }
 
 .skillItem {
-  background-color: #1a1a1a;
+  background-color: var(--bg-primary);
   padding: 32px 28px;
   display: flex;
   flex-direction: column;
@@ -273,7 +273,7 @@
 .skillNumber {
   font-family: 'Cormorant Garamond', 'Times New Roman', serif;
   font-size: 12px;
-  color: rgba(201, 169, 110, 0.5);
+  color: rgb(var(--rgb-accent) / 0.5);
   letter-spacing: 0.08em;
 }
 
@@ -311,18 +311,18 @@
   display: inline-block;
   width: 40px;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(201, 169, 110, 0.5));
+  background: linear-gradient(to right, transparent, rgb(var(--rgb-accent) / 0.5));
 }
 
 .ctaSeparators .ctaLine:last-child {
-  background: linear-gradient(to left, transparent, rgba(201, 169, 110, 0.5));
+  background: linear-gradient(to left, transparent, rgb(var(--rgb-accent) / 0.5));
 }
 
 .ctaDiamond {
   display: inline-block;
   width: 5px;
   height: 5px;
-  background-color: #c9a96e;
+  background-color: var(--accent);
   transform: rotate(45deg);
   opacity: 0.7;
 }
@@ -337,14 +337,14 @@
   font-family: 'Cormorant Garamond', 'Times New Roman', serif;
   font-size: 44px;
   font-weight: 400;
-  color: #f5f5f5;
+  color: var(--text-primary);
   letter-spacing: -0.01em;
   line-height: 1.2;
   margin-bottom: 18px;
 }
 
 .ctaAccent {
-  color: #c9a96e;
+  color: var(--accent);
   font-style: italic;
 }
 
@@ -378,7 +378,7 @@
   font-weight: 400;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
   text-decoration: none;
   transition: all 0.4s ease;
 }
@@ -404,8 +404,8 @@
 }
 
 .ctaSecondary:hover {
-  border-color: rgba(245, 245, 245, 0.4);
-  color: #f5f5f5;
+  border-color: rgb(var(--rgb-text) / 0.4);
+  color: var(--text-primary);
 }
 
 /* ── Next Barber ── */
@@ -461,30 +461,30 @@
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(201, 169, 110, 0.7);
+  color: rgb(var(--rgb-accent) / 0.7);
 }
 
 .nextName {
   font-family: 'Cormorant Garamond', 'Times New Roman', serif;
   font-size: 40px;
   font-weight: 400;
-  color: #f5f5f5;
+  color: var(--text-primary);
   letter-spacing: -0.01em;
   transition: color 0.3s ease;
 }
 
 .nextBarber:hover .nextName {
-  color: #c9a96e;
+  color: var(--accent);
 }
 
 .nextContent svg {
-  color: rgba(245, 245, 245, 0.4);
+  color: rgb(var(--rgb-text) / 0.4);
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .nextBarber:hover .nextContent svg {
   transform: translateX(6px);
-  color: #c9a96e;
+  color: var(--accent);
 }
 
 /* ── Responsive ── */

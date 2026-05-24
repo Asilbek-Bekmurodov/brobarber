@@ -1,5 +1,5 @@
 .contact {
-  background-color: #111111;
+  background-color: var(--bg-secondary);
   padding: 120px 60px 0;
   position: relative;
 }
@@ -12,7 +12,7 @@
   transform: translateX(-50%);
   width: 1px;
   height: 80px;
-  background: linear-gradient(to bottom, transparent, rgba(201, 169, 110, 0.4));
+  background: linear-gradient(to bottom, transparent, rgb(var(--rgb-accent) / 0.4));
 }
 
 .container {
@@ -34,7 +34,7 @@
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
   margin-bottom: 24px;
 }
 
@@ -50,18 +50,18 @@
   display: inline-block;
   width: 48px;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(201, 169, 110, 0.5));
+  background: linear-gradient(to right, transparent, rgb(var(--rgb-accent) / 0.5));
 }
 
 .separators .line:last-child {
-  background: linear-gradient(to left, transparent, rgba(201, 169, 110, 0.5));
+  background: linear-gradient(to left, transparent, rgb(var(--rgb-accent) / 0.5));
 }
 
 .diamond {
   display: inline-block;
   width: 5px;
   height: 5px;
-  background-color: #c9a96e;
+  background-color: var(--accent);
   transform: rotate(45deg);
   opacity: 0.7;
 }
@@ -77,13 +77,13 @@
   font-size: 52px;
   font-weight: 400;
   line-height: 1.15;
-  color: #f5f5f5;
+  color: var(--text-primary);
   letter-spacing: -0.01em;
   margin-bottom: 20px;
 }
 
 .headingAccent {
-  color: #c9a96e;
+  color: var(--accent);
   font-style: italic;
 }
 
@@ -92,7 +92,7 @@
   font-size: 14px;
   font-weight: 300;
   line-height: 1.8;
-  color: rgba(245, 245, 245, 0.45);
+  color: rgb(var(--rgb-text) / 0.45);
   max-width: 460px;
   margin: 0 auto;
   letter-spacing: 0.01em;
@@ -115,7 +115,7 @@
   min-height: 600px;
   display: flex;
   flex-direction: column;
-  background-color: #0d0d0d;
+  background-color: var(--bg-deep);
 }
 
 .mapLabel {
@@ -126,14 +126,14 @@
   font-family: "Inter", sans-serif;
   font-size: 12px;
   font-weight: 300;
-  color: rgba(245, 245, 245, 0.45);
+  color: rgb(var(--rgb-text) / 0.45);
   letter-spacing: 0.02em;
-  border-bottom: 1px solid rgba(245, 245, 245, 0.06);
-  background-color: #111111;
+  border-bottom: 1px solid rgb(var(--rgb-text) / 0.06);
+  background-color: var(--bg-secondary);
 }
 
 .mapLabel svg {
-  color: #c9a96e;
+  color: var(--accent);
   flex-shrink: 0;
 }
 
@@ -149,7 +149,7 @@
 /* ── Right Column ── */
 
 .rightCol {
-  background-color: #111111;
+  background-color: var(--bg-secondary);
   display: flex;
   flex-direction: column;
 }
@@ -172,14 +172,14 @@
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
   margin-bottom: 14px;
 }
 
 .formDivider {
   width: 36px;
   height: 1px;
-  background-color: rgba(201, 169, 110, 0.4);
+  background-color: rgb(var(--rgb-accent) / 0.4);
 }
 
 .fields {
@@ -201,7 +201,7 @@
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.3);
+  color: rgb(var(--rgb-text) / 0.3);
 }
 
 .input,
@@ -213,7 +213,7 @@
   font-family: "Inter", sans-serif;
   font-size: 14px;
   font-weight: 300;
-  color: #f5f5f5;
+  color: var(--text-primary);
   outline: none;
   width: 100%;
   transition: border-color 0.3s ease;
@@ -222,12 +222,12 @@
 
 .input::placeholder,
 .textarea::placeholder {
-  color: rgba(245, 245, 245, 0.2);
+  color: rgb(var(--rgb-text) / 0.2);
 }
 
 .input:focus,
 .textarea:focus {
-  border-bottom-color: rgba(201, 169, 110, 0.6);
+  border-bottom-color: rgb(var(--rgb-accent) / 0.6);
 }
 
 .textarea {
@@ -240,14 +240,14 @@
   align-items: center;
   gap: 10px;
   padding: 14px 36px;
-  border: 1px solid rgba(201, 169, 110, 0.4);
+  border: 1px solid rgb(var(--rgb-accent) / 0.4);
   border-radius: 30px;
   font-family: "Inter", sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
   background: transparent;
   cursor: pointer;
   transition: all 0.4s ease;
@@ -259,7 +259,7 @@
 
 .submitBtn:hover {
   background: rgba(201, 169, 110, 0.08);
-  border-color: rgba(201, 169, 110, 0.75);
+  border-color: rgb(var(--rgb-accent) / 0.75);
 }
 
 .submitBtn:hover svg {
@@ -274,7 +274,7 @@
 
 .socialsDivider {
   height: 1px;
-  background-color: rgba(245, 245, 245, 0.06);
+  background-color: rgb(var(--rgb-text) / 0.06);
   margin-bottom: 32px;
 }
 
@@ -284,7 +284,7 @@
   gap: 16px;
   padding: 14px 0;
   text-decoration: none;
-  border-bottom: 1px solid rgba(245, 245, 245, 0.05);
+  border-bottom: 1px solid rgb(var(--rgb-text) / 0.05);
   transition: all 0.3s ease;
   cursor: pointer;
 }
@@ -294,22 +294,22 @@
 }
 
 .socialItem:hover .socialIcon {
-  color: #c9a96e;
-  border-color: rgba(201, 169, 110, 0.4);
+  color: var(--accent);
+  border-color: rgb(var(--rgb-accent) / 0.4);
 }
 
 .socialItem:hover .socialValue {
-  color: #f5f5f5;
+  color: var(--text-primary);
 }
 
 .socialIcon {
   width: 40px;
   height: 40px;
-  border: 1px solid rgba(245, 245, 245, 0.08);
+  border: 1px solid rgb(var(--rgb-text) / 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(245, 245, 245, 0.35);
+  color: rgb(var(--rgb-text) / 0.35);
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
@@ -326,14 +326,14 @@
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.28);
+  color: rgb(var(--rgb-text) / 0.28);
 }
 
 .socialValue {
   font-family: "Inter", sans-serif;
   font-size: 13px;
   font-weight: 300;
-  color: rgba(245, 245, 245, 0.6);
+  color: rgb(var(--rgb-text) / 0.6);
   letter-spacing: 0.01em;
   transition: color 0.3s ease;
 }

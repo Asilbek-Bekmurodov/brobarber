@@ -1,8 +1,8 @@
 /* ── Page shell ── */
 .page {
   min-height: 100vh;
-  background: #141414;
-  color: #f5f5f5;
+  background: var(--bg-card-alt);
+  color: var(--text-primary);
   padding-bottom: 120px;
 }
 
@@ -10,8 +10,8 @@
 .header {
   position: relative;
   padding: 40px 24px 32px;
-  border-bottom: 1px solid #222;
-  background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+  border-bottom: 1px solid var(--bg-card-hover);
+  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-card-alt) 100%);
 }
 
 .backBtn {
@@ -25,7 +25,7 @@
   font-weight: 500;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #888;
+  color: rgb(var(--rgb-text) / 0.45);
   background: none;
   border: none;
   cursor: pointer;
@@ -78,7 +78,7 @@
   font-size: clamp(26px, 5vw, 38px);
   font-weight: 300;
   letter-spacing: -0.01em;
-  color: #f5f5f5;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -119,7 +119,7 @@
   font-size: 18px;
   font-weight: 400;
   letter-spacing: 0.02em;
-  color: #f5f5f5;
+  color: var(--text-primary);
 }
 
 /* ── Service chips ── */
@@ -163,7 +163,7 @@
 .serviceChipActive .chipTitle { color: #c9a84c; }
 
 .chipIcon {
-  color: #888;
+  color: rgb(var(--rgb-text) / 0.45);
   flex-shrink: 0;
   transition: color 0.2s;
 }
@@ -320,7 +320,7 @@
   border-radius: 8px;
   background: #1e1e1e;
   border: 1px solid #2a2a2a;
-  color: #888;
+  color: rgb(var(--rgb-text) / 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -348,7 +348,7 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   border-radius: 12px;
-  border: 1px solid #222;
+  border: 1px solid var(--bg-card-hover);
   background: #181818;
 }
 
@@ -359,9 +359,9 @@
 }
 
 .gridCorner {
-  background: #1a1a1a;
-  border-bottom: 1px solid #222;
-  border-right: 1px solid #222;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--bg-card-hover);
+  border-right: 1px solid var(--bg-card-hover);
   position: sticky;
   left: 0;
   z-index: 2;
@@ -373,9 +373,9 @@
   align-items: center;
   justify-content: center;
   padding: 12px 4px;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid var(--bg-card-hover);
   border-right: 1px solid #1e1e1e;
-  background: #1a1a1a;
+  background: var(--bg-primary);
   gap: 2px;
 }
 
@@ -389,7 +389,7 @@
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #888;
+  color: rgb(var(--rgb-text) / 0.45);
 }
 
 .dayHeaderToday .dayName { color: #c9a84c; }
@@ -412,9 +412,9 @@
   font-weight: 500;
   color: #444;
   letter-spacing: 0.04em;
-  border-right: 1px solid #222;
+  border-right: 1px solid var(--bg-card-hover);
   border-bottom: 1px solid #1e1e1e;
-  background: #1a1a1a;
+  background: var(--bg-primary);
   position: sticky;
   left: 0;
   z-index: 1;
@@ -434,7 +434,7 @@
 }
 
 .slotAvailable:hover {
-  background: #222;
+  background: var(--bg-card-hover);
   border-color: #c9a84c44;
 }
 
@@ -498,10 +498,10 @@
   border-radius: 3px;
 }
 
-.legendAvailable { background: #222; border: 1px solid #333; }
+.legendAvailable { background: var(--bg-card-hover); border: 1px solid #333; }
 .legendBooked {
   background: repeating-linear-gradient(
-    45deg, #181818, #181818 3px, #222 3px, #222 4px
+    45deg, #181818, #181818 3px, var(--bg-card-hover) 3px, var(--bg-card-hover) 4px
   );
   border: 1px solid #2a2a2a;
 }
@@ -513,7 +513,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: #1a1a1a;
+  background: var(--bg-primary);
   border-top: 1px solid #2a2a2a;
   padding: 16px 24px;
   transform: translateY(100%);
@@ -552,7 +552,7 @@
   color: #ccc;
 }
 
-.summaryIcon { color: #888; display: flex; }
+.summaryIcon { color: rgb(var(--rgb-text) / 0.45); display: flex; }
 
 .summarySep {
   color: #444;
@@ -593,7 +593,7 @@
 /* ── Confirmed screen ── */
 .confirmedPage {
   min-height: 100vh;
-  background: #141414;
+  background: var(--bg-card-alt);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -603,7 +603,7 @@
 .confirmedCard {
   max-width: 420px;
   width: 100%;
-  background: #1a1a1a;
+  background: var(--bg-primary);
   border: 1px solid #2a2a2a;
   border-radius: 16px;
   padding: 48px 40px;
@@ -634,7 +634,7 @@
 .confirmedTitle {
   font-size: 28px;
   font-weight: 300;
-  color: #f5f5f5;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
@@ -645,8 +645,8 @@
 }
 
 .confirmedDetails {
-  background: #141414;
-  border: 1px solid #222;
+  background: var(--bg-card-alt);
+  border: 1px solid var(--bg-card-hover);
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 32px;
@@ -676,7 +676,7 @@
 
 .confirmedDivider {
   height: 1px;
-  background: #222;
+  background: var(--bg-card-hover);
 }
 
 .confirmedBtn {

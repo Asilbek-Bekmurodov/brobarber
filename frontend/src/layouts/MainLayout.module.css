@@ -2,7 +2,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #1a1a1a;
+  background-color: var(--bg-primary);
+  transition: background-color 0.3s ease;
 }
 
 .main {

@@ -1,3 +1,46 @@
+/* ── Theme Variables ── */
+:root,
+[data-theme="dark"] {
+  --rgb-bg:     26 26 26;
+  --rgb-bg2:    17 17 17;
+  --rgb-bg3:    13 13 13;
+  --rgb-card:   30 30 30;
+  --rgb-text:   245 245 245;
+  --rgb-accent: 201 169 110;
+
+  --bg-primary:    #1a1a1a;
+  --bg-secondary:  #111111;
+  --bg-deep:       #0d0d0d;
+  --bg-card:       #1e1e1e;
+  --bg-card-alt:   #141414;
+  --bg-card-hover: #242424;
+  --text-primary:  #f5f5f5;
+  --accent:        #c9a96e;
+
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --rgb-bg:     245 240 232;
+  --rgb-bg2:    235 229 218;
+  --rgb-bg3:    224 217 204;
+  --rgb-card:   255 252 246;
+  --rgb-text:   26 26 26;
+  --rgb-accent: 184 146 74;
+
+  --bg-primary:    #f5f0e8;
+  --bg-secondary:  #ebe5da;
+  --bg-deep:       #e0d9cc;
+  --bg-card:       #fffcf6;
+  --bg-card-alt:   #f0ebe0;
+  --bg-card-hover: #e8e2d6;
+  --text-primary:  #1a1a1a;
+  --accent:        #b8924a;
+
+  color-scheme: light;
+}
+
+/* ── Reset ── */
 * {
   margin: 0;
   padding: 0;
@@ -10,11 +53,12 @@ html {
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #1a1a1a;
-  color: #f5f5f5;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {

@@ -1,0 +1,291 @@
+{
+  "info": {
+    "name": "BroBarber API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://brobarber-392z.onrender.com" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ali\",\n  \"lastName\": \"Karimov\",\n  \"phoneNumber\": \"+998901234567\",\n  \"password\": \"secret123\",\n  \"role\": \"user\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register (barber)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Barber\",\n  \"lastName\": \"Pro\",\n  \"phoneNumber\": \"+998901234568\",\n  \"password\": \"secret123\",\n  \"role\": \"barber\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var res = pm.response.json();",
+                  "if (res.token) pm.collectionVariables.set('token', res.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phoneNumber\": \"+998901234567\",\n  \"password\": \"secret123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/api/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users (admin)",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/api/users"
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/api/users/:id"
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/api/users/:id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Barbers",
+      "item": [
+        {
+          "name": "Get All Barbers",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/barbers"
+          }
+        },
+        {
+          "name": "Get Barber by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/barbers/:id"
+          }
+        },
+        {
+          "name": "Update Barber",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/barbers/:id",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Updated\",\n  \"lastName\": \"Barber\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Get All Services",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/services"
+          }
+        },
+        {
+          "name": "Get Service by ID",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/services/:id"
+          }
+        },
+        {
+          "name": "Create Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/services",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Soch olish\",\n  \"description\": \"Klassik soch olish\",\n  \"price\": 30000,\n  \"duration\": 30\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Service",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/services/:id",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Yangilangan xizmat\",\n  \"price\": 35000,\n  \"duration\": 30\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Service",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/api/services/:id"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Get Available Slots",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/bookings/slots?barberId=BARBER_ID&date=2026-05-24",
+              "query": [
+                { "key": "barberId", "value": "BARBER_ID" },
+                { "key": "date", "value": "2026-05-24" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/bookings",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"barber\": \"BARBER_ID\",\n  \"service\": \"SERVICE_ID\",\n  \"date\": \"2026-05-24\",\n  \"time\": \"10:00\",\n  \"notes\": \"\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Bookings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/api/bookings/my"
+          }
+        },
+        {
+          "name": "Get All Bookings (admin/barber)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/api/bookings"
+          }
+        },
+        {
+          "name": "Update Booking Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/bookings/:id/status",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"confirmed\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/api/bookings/:id/cancel"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Schedule",
+      "item": [
+        {
+          "name": "Get Schedule",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/schedule/:barberId"
+          }
+        },
+        {
+          "name": "Upsert Schedule",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/api/schedule",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workDays\": [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\"],\n  \"startTime\": \"09:00\",\n  \"endTime\": \"18:00\",\n  \"slotDuration\": 30\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

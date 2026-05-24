@@ -1,5 +1,5 @@
 .team {
-  background-color: #1a1a1a;
+  background-color: var(--bg-primary);
   padding: 120px 60px;
   position: relative;
 }
@@ -12,7 +12,7 @@
   transform: translateX(-50%);
   width: 1px;
   height: 80px;
-  background: linear-gradient(to bottom, transparent, rgba(201, 169, 110, 0.3));
+  background: linear-gradient(to bottom, transparent, rgb(var(--rgb-accent) / 0.3));
 }
 
 .container {
@@ -34,7 +34,7 @@
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
   margin-bottom: 24px;
 }
 
@@ -50,18 +50,18 @@
   display: inline-block;
   width: 48px;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(201, 169, 110, 0.5));
+  background: linear-gradient(to right, transparent, rgb(var(--rgb-accent) / 0.5));
 }
 
 .separators .line:last-child {
-  background: linear-gradient(to left, transparent, rgba(201, 169, 110, 0.5));
+  background: linear-gradient(to left, transparent, rgb(var(--rgb-accent) / 0.5));
 }
 
 .diamond {
   display: inline-block;
   width: 5px;
   height: 5px;
-  background-color: #c9a96e;
+  background-color: var(--accent);
   transform: rotate(45deg);
   opacity: 0.7;
 }
@@ -77,13 +77,13 @@
   font-size: 52px;
   font-weight: 400;
   line-height: 1.15;
-  color: #f5f5f5;
+  color: var(--text-primary);
   letter-spacing: -0.01em;
   margin-bottom: 20px;
 }
 
 .headingAccent {
-  color: #c9a96e;
+  color: var(--accent);
   font-style: italic;
 }
 
@@ -92,7 +92,7 @@
   font-size: 14px;
   font-weight: 300;
   line-height: 1.8;
-  color: rgba(245, 245, 245, 0.45);
+  color: rgb(var(--rgb-text) / 0.45);
   max-width: 440px;
   margin: 0 auto;
   letter-spacing: 0.01em;
@@ -104,7 +104,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2px;
-  background-color: rgba(201, 169, 110, 0.08);
+  background-color: rgb(var(--rgb-accent) / 0.08);
 }
 
 /* ── Card ── */
@@ -112,7 +112,7 @@
 .card {
   display: flex;
   flex-direction: column;
-  background-color: #1a1a1a;
+  background-color: var(--bg-primary);
   text-decoration: none;
   color: inherit;
   cursor: pointer;
@@ -131,7 +131,7 @@
 }
 
 .card:hover::after {
-  box-shadow: inset 0 0 0 1px rgba(201, 169, 110, 0.3);
+  box-shadow: inset 0 0 0 1px rgb(var(--rgb-accent) / 0.3);
 }
 
 /* ── Image ── */
@@ -182,7 +182,7 @@
   left: 24px;
   font-family: 'Cormorant Garamond', 'Times New Roman', serif;
   font-size: 12px;
-  color: rgba(201, 169, 110, 0.7);
+  color: rgb(var(--rgb-accent) / 0.7);
   letter-spacing: 0.1em;
   z-index: 2;
 }
@@ -194,7 +194,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  border-top: 1px solid rgba(245, 245, 245, 0.05);
+  border-top: 1px solid rgb(var(--rgb-text) / 0.05);
 }
 
 .cardMeta {
@@ -210,7 +210,7 @@
   font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
 }
 
 .cardExp {
@@ -218,14 +218,14 @@
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.06em;
-  color: rgba(245, 245, 245, 0.3);
+  color: rgb(var(--rgb-text) / 0.3);
 }
 
 .cardName {
   font-family: 'Cormorant Garamond', 'Times New Roman', serif;
   font-size: 24px;
   font-weight: 400;
-  color: #f5f5f5;
+  color: var(--text-primary);
   letter-spacing: 0.01em;
   margin-bottom: 6px;
   transition: color 0.3s ease;
@@ -233,14 +233,14 @@
 }
 
 .card:hover .cardName {
-  color: #c9a96e;
+  color: var(--accent);
 }
 
 .cardSpecialty {
   font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 300;
-  color: rgba(245, 245, 245, 0.4);
+  color: rgb(var(--rgb-text) / 0.4);
   letter-spacing: 0.02em;
   margin-bottom: 14px;
 }
@@ -250,7 +250,7 @@
   font-size: 12.5px;
   font-weight: 300;
   line-height: 1.75;
-  color: rgba(245, 245, 245, 0.45);
+  color: rgb(var(--rgb-text) / 0.45);
   margin-bottom: 24px;
   flex: 1;
 }
@@ -264,7 +264,7 @@
   gap: 12px;
   margin-top: auto;
   padding-top: 20px;
-  border-top: 1px solid rgba(245, 245, 245, 0.06);
+  border-top: 1px solid rgb(var(--rgb-text) / 0.06);
 }
 
 .profileBtn {
@@ -276,7 +276,7 @@
   font-weight: 500;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.35);
+  color: rgb(var(--rgb-text) / 0.35);
   transition: color 0.3s ease;
 }
 
@@ -285,7 +285,7 @@
 }
 
 .card:hover .profileBtn {
-  color: #f5f5f5;
+  color: var(--text-primary);
 }
 
 .card:hover .profileBtn svg {
@@ -297,14 +297,14 @@
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  border: 1px solid rgba(201, 169, 110, 0.3);
+  border: 1px solid rgb(var(--rgb-accent) / 0.3);
   border-radius: 20px;
   font-family: 'Inter', sans-serif;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
   text-decoration: none;
   transition: all 0.3s ease;
   background: transparent;
@@ -312,8 +312,8 @@
 }
 
 .messageBtn:hover {
-  background: rgba(201, 169, 110, 0.1);
-  border-color: rgba(201, 169, 110, 0.7);
+  background: rgb(var(--rgb-accent) / 0.1);
+  border-color: rgb(var(--rgb-accent) / 0.7);
 }
 
 /* ── Responsive ── */

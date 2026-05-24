@@ -1,5 +1,5 @@
 .services {
-  background-color: #111111;
+  background-color: var(--bg-secondary);
   padding: 120px 60px;
   position: relative;
 }
@@ -34,7 +34,7 @@
   font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
   margin-bottom: 24px;
 }
 
@@ -50,18 +50,18 @@
   display: inline-block;
   width: 48px;
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(201, 169, 110, 0.5));
+  background: linear-gradient(to right, transparent, rgb(var(--rgb-accent) / 0.5));
 }
 
 .separators .line:last-child {
-  background: linear-gradient(to left, transparent, rgba(201, 169, 110, 0.5));
+  background: linear-gradient(to left, transparent, rgb(var(--rgb-accent) / 0.5));
 }
 
 .diamond {
   display: inline-block;
   width: 5px;
   height: 5px;
-  background-color: #c9a96e;
+  background-color: var(--accent);
   transform: rotate(45deg);
   opacity: 0.7;
 }
@@ -77,13 +77,13 @@
   font-size: 52px;
   font-weight: 400;
   line-height: 1.15;
-  color: #f5f5f5;
+  color: var(--text-primary);
   letter-spacing: -0.01em;
   margin-bottom: 20px;
 }
 
 .headingAccent {
-  color: #c9a96e;
+  color: var(--accent);
   font-style: italic;
 }
 
@@ -92,7 +92,7 @@
   font-size: 14px;
   font-weight: 300;
   line-height: 1.8;
-  color: rgba(245, 245, 245, 0.45);
+  color: rgb(var(--rgb-text) / 0.45);
   max-width: 480px;
   margin: 0 auto;
   letter-spacing: 0.01em;
@@ -104,7 +104,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 2px;
-  background-color: rgba(201, 169, 110, 0.08);
+  background-color: rgb(var(--rgb-accent) / 0.08);
 }
 
 /* ── Card ── */
@@ -169,7 +169,7 @@
 }
 
 .card:hover::after {
-  box-shadow: inset 0 0 0 1px rgba(201, 169, 110, 0.3);
+  box-shadow: inset 0 0 0 1px rgb(var(--rgb-accent) / 0.3);
 }
 
 /* Content sits above image and overlay */
@@ -200,13 +200,13 @@
 }
 
 .cardIcon {
-  color: rgba(245, 245, 245, 0.4);
+  color: rgb(var(--rgb-text) / 0.4);
   transition: color 0.4s ease, transform 0.4s ease;
   display: flex;
 }
 
 .card:hover .cardIcon {
-  color: #c9a96e;
+  color: var(--accent);
   transform: scale(1.1);
 }
 
@@ -214,7 +214,7 @@
   font-family: 'Cormorant Garamond', 'Times New Roman', serif;
   font-size: 28px;
   font-weight: 400;
-  color: #f5f5f5;
+  color: var(--text-primary);
   letter-spacing: 0.01em;
   margin-bottom: 20px;
   line-height: 1.2;
@@ -222,13 +222,13 @@
 }
 
 .card:hover .cardTitle {
-  color: #c9a96e;
+  color: var(--accent);
 }
 
 .divider {
   width: 28px;
   height: 1px;
-  background-color: rgba(201, 169, 110, 0.5);
+  background-color: rgb(var(--rgb-accent) / 0.5);
   margin-bottom: 24px;
   transition: width 0.5s ease;
 }
@@ -253,13 +253,13 @@
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 300;
-  color: rgba(245, 245, 245, 0.5);
+  color: rgb(var(--rgb-text) / 0.5);
   letter-spacing: 0.01em;
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .card:hover .serviceItem {
-  color: rgba(245, 245, 245, 0.75);
+  color: rgb(var(--rgb-text) / 0.75);
 }
 
 .serviceItem:hover {
@@ -270,7 +270,7 @@
   display: inline-block;
   width: 4px;
   height: 4px;
-  background-color: #c9a96e;
+  background-color: var(--accent);
   transform: rotate(45deg);
   flex-shrink: 0;
   opacity: 0.5;
@@ -290,7 +290,7 @@
   font-weight: 500;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(245, 245, 245, 0.3);
+  color: rgb(var(--rgb-text) / 0.3);
   background: none;
   border: none;
   padding: 0;
@@ -304,7 +304,7 @@
 }
 
 .card:hover .bookBtn {
-  color: #c9a96e;
+  color: var(--accent);
 }
 
 .card:hover .bookBtn svg {
@@ -322,22 +322,22 @@
 .allServicesBtn {
   display: inline-block;
   padding: 16px 52px;
-  border: 1px solid rgba(201, 169, 110, 0.35);
+  border: 1px solid rgb(var(--rgb-accent) / 0.35);
   border-radius: 30px;
   font-family: 'Inter', sans-serif;
   font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #c9a96e;
+  color: var(--accent);
   background: transparent;
   cursor: pointer;
   transition: all 0.4s ease;
 }
 
 .allServicesBtn:hover {
-  background: rgba(201, 169, 110, 0.08);
-  border-color: rgba(201, 169, 110, 0.7);
+  background: rgb(var(--rgb-accent) / 0.08);
+  border-color: rgb(var(--rgb-accent) / 0.7);
   letter-spacing: 0.18em;
 }
 
