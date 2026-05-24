@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import MainLayout from './layouts/MainLayout'
+import LandingPage from './pages/LandingPage'
 import HomePage from './pages/HomePage'
 import BarberDetailPage from './pages/BarberDetailPage'
 import ServicesPage from './pages/ServicesPage'
@@ -21,8 +22,16 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/barbers/:id" element={<BarberDetailPage />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route

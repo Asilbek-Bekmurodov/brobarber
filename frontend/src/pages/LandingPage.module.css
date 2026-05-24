@@ -1,0 +1,516 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+.page {
+  background: #1a1a1a;
+  color: #f5f5f5;
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── Header ── */
+
+.header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 0 60px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  transition: background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.headerSolid {
+  background: rgba(18, 18, 18, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(201, 169, 110, 0.12);
+}
+
+.headerInner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #c9a96e;
+  letter-spacing: 0.02em;
+  cursor: default;
+}
+
+.nav {
+  display: flex;
+  gap: 40px;
+}
+
+.navLink {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.55);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+
+.navLink:hover {
+  color: #f5f5f5;
+}
+
+.authBtns {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.signInBtn {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: rgba(245, 245, 245, 0.65);
+  text-decoration: none;
+  padding: 9px 22px;
+  border: 1px solid rgba(245, 245, 245, 0.18);
+  border-radius: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.signInBtn:hover {
+  color: #f5f5f5;
+  border-color: rgba(245, 245, 245, 0.45);
+}
+
+.registerBtn {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  text-decoration: none;
+  padding: 9px 22px;
+  background: #c9a96e;
+  border-radius: 2px;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.registerBtn:hover {
+  background: #d4b67a;
+  transform: translateY(-1px);
+}
+
+/* ── Hero ── */
+
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 640px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  background: url('/hero-bg.jpg') center / cover no-repeat;
+  animation: heroZoom 12s ease-out forwards;
+}
+
+@keyframes heroZoom {
+  from { transform: scale(1.07); }
+  to   { transform: scale(1.00); }
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(8, 6, 2, 0.88) 0%,
+    rgba(18, 13, 4, 0.72) 55%,
+    rgba(10, 8, 3, 0.82) 100%
+  );
+}
+
+.heroContent {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 0 24px;
+  max-width: 900px;
+}
+
+.heroEyebrow {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: #c9a96e;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.3s forwards;
+}
+
+.heroHeadline {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(60px, 9vw, 116px);
+  font-weight: 500;
+  line-height: 0.98;
+  color: #f5f5f5;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.55s forwards;
+}
+
+.heroHeadline em {
+  font-style: italic;
+  color: #c9a96e;
+}
+
+.heroSub {
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: rgba(245, 245, 245, 0.5);
+  margin-bottom: 52px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.75s forwards;
+}
+
+.heroCtas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 0.95s forwards;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ctaPrimary {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #1a1a1a;
+  background: #c9a96e;
+  padding: 16px 40px;
+  border-radius: 2px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.ctaPrimary:hover {
+  background: #d4b67a;
+  transform: translateY(-2px);
+}
+
+.ctaSecondary {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(245, 245, 245, 0.65);
+  padding: 16px 40px;
+  border: 1px solid rgba(245, 245, 245, 0.2);
+  border-radius: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.ctaSecondary:hover {
+  color: #f5f5f5;
+  border-color: rgba(245, 245, 245, 0.5);
+}
+
+.heroScroll {
+  position: absolute;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  animation: fadeUp 0.9s ease 1.4s forwards;
+}
+
+.scrollLine {
+  display: block;
+  width: 1px;
+  height: 52px;
+  background: linear-gradient(to bottom, transparent, rgba(201, 169, 110, 0.8));
+  animation: scrollPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 1; }
+}
+
+.scrollText {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(201, 169, 110, 0.45);
+}
+
+/* ── Stats ── */
+
+.stats {
+  background: #131313;
+  border-top: 1px solid rgba(201, 169, 110, 0.12);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.12);
+}
+
+.statsInner {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 72px 48px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.statNum {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-weight: 600;
+  color: #c9a96e;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 245, 0.38);
+}
+
+/* ── Services ── */
+
+.services {
+  padding: 120px 48px;
+}
+
+.servicesInner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 72px;
+  text-align: center;
+}
+
+.sectionTag {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #c9a96e;
+}
+
+.sectionTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-weight: 500;
+  color: #f5f5f5;
+  line-height: 1.08;
+}
+
+.serviceCards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.serviceCard {
+  background: #1e1e1e;
+  padding: 52px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.25s;
+  cursor: default;
+}
+
+.serviceCard::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: #c9a96e;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+
+.serviceCard:hover {
+  background: #222;
+}
+
+.serviceCard:hover::before {
+  transform: scaleX(1);
+}
+
+.serviceIcon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.serviceTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 500;
+  color: #f5f5f5;
+}
+
+.serviceDesc {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(245, 245, 245, 0.45);
+  flex: 1;
+}
+
+.serviceArrow {
+  font-size: 18px;
+  color: #c9a96e;
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.25s;
+  transform: translateX(-6px);
+}
+
+.serviceCard:hover .serviceArrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── CTA Banner ── */
+
+.ctaBanner {
+  background: #c9a96e;
+  padding: 88px 60px;
+}
+
+.ctaBannerInner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.ctaBannerTag {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(26, 26, 26, 0.55);
+  margin-bottom: 10px;
+}
+
+.ctaBannerTitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 44px;
+  font-weight: 500;
+  color: #1a1a1a;
+  line-height: 1.1;
+}
+
+.ctaBannerBtn {
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #c9a96e;
+  background: #1a1a1a;
+  padding: 18px 44px;
+  border-radius: 2px;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.ctaBannerBtn:hover {
+  background: #242424;
+  transform: translateY(-2px);
+}
+
+/* ── Footer ── */
+
+.footer {
+  background: #0f0f0f;
+  padding: 44px 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(201, 169, 110, 0.08);
+}
+
+.footerLogo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: #c9a96e;
+}
+
+.footerCopy {
+  font-size: 12px;
+  color: rgba(245, 245, 245, 0.25);
+  letter-spacing: 0.04em;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 768px) {
+  .header { padding: 0 24px; }
+  .nav { display: none; }
+
+  .statsInner {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 52px 24px;
+    gap: 32px;
+  }
+
+  .services { padding: 80px 24px; }
+  .serviceCards { grid-template-columns: 1fr; }
+
+  .heroCtas { flex-direction: column; gap: 12px; }
+
+  .ctaBanner { padding: 64px 24px; }
+  .ctaBannerInner { flex-direction: column; text-align: center; }
+
+  .footer { padding: 36px 24px; flex-direction: column; gap: 12px; text-align: center; }
+}

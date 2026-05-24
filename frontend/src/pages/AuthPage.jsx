@@ -23,7 +23,11 @@ const AuthPage = () => {
   const [isBarber, setIsBarber] = useState(false)
 
   useEffect(() => {
-    if (user) navigate('/')
+    if (user) {
+      if (user.role === 'barber') navigate('/barber')
+      else if (user.role === 'admin') navigate('/dashboard')
+      else navigate('/home')
+    }
   }, [user, navigate])
 
   useEffect(() => {
@@ -68,7 +72,7 @@ const AuthPage = () => {
       const redirectTo = searchParams.get('redirect')
       if (redirectTo) return navigate(redirectTo)
       const role = result.payload?.user?.role
-      navigate(role === 'barber' ? '/barber' : role === 'admin' ? '/dashboard' : '/')
+      navigate(role === 'barber' ? '/barber' : role === 'admin' ? '/dashboard' : '/home')
     }
   }
 
@@ -84,7 +88,7 @@ const AuthPage = () => {
     if (!result.error) {
       const redirectTo = searchParams.get('redirect')
       if (redirectTo) return navigate(redirectTo)
-      navigate(isBarber ? '/barber' : '/')
+      navigate(isBarber ? '/barber' : '/home')
     }
   }
 

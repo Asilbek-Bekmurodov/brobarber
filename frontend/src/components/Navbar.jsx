@@ -1,25 +1,36 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { logout } from '../store/authSlice'
 import styles from './Navbar.module.css'
 
 const navLinks = [
-  { label: 'Home', path: '/' },
-  { label: 'About', path: '/about' },
+  { label: 'Home',              path: '/home' },
   { label: 'Services & Pricing', path: '/services' },
-  { label: 'Gallery', path: '/gallery' },
-  { label: 'Blog', path: '/blog' },
-  { label: 'Contact', path: '/contact' },
 ]
 
 const Navbar = () => {
-  const [activeLink, setActiveLink] = useState('Home')
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { user } = useSelector((s) => s.auth)
+  const [activeLink, setActiveLink] = useState('')
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate('/')
+  }
+
+  const dashboardPath =
+    user?.role === 'admin'  ? '/dashboard' :
+    user?.role === 'barber' ? '/barber'    : '/home'
 
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
-        <Link to="/" className={styles.logo}>
+        <Link to={user ? dashboardPath : '/'} className={styles.logo}>
           Trim.
         </Link>
+
         <ul className={styles.navLinks}>
           {navLinks.map((link) => (
             <li key={link.label}>
@@ -33,10 +44,28 @@ const Navbar = () => {
             </li>
           ))}
         </ul>
+
         <div className={styles.authButtons}>
-          <Link to="/auth?tab=login" className={styles.signInBtn}>Sign In</Link>
-          <Link to="/auth?tab=register" className={styles.registerBtn}>Register</Link>
-          <Link to="/dashboard" className={styles.dashboardBtn}>Dashboard</Link>
+          {user ? (
+            <>
+              <span className={styles.userName}>
+                {user.firstName} {user.lastName}
+              </span>
+              {user.role !== 'user' && (
+                <Link to={dashboardPath} className={styles.dashboardBtn}>
+                  {user.role === 'admin' ? 'Dashboard' : 'My Panel'}
+                </Link>
+              )}
+              <button className={styles.logoutBtn} onClick={handleLogout}>
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/auth?tab=login"    className={styles.signInBtn}>Sign In</Link>
+              <Link to="/auth?tab=register" className={styles.registerBtn}>Register</Link>
+            </>
+          )}
         </div>
       </div>
     </nav>
